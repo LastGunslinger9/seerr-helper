@@ -2,6 +2,19 @@ import { MessageRequest, MessageResponse, UiState } from '../utils/types'
 
 // ── TMDB ID resolution ───────────────────────────────────────────────────────
 
+function waitForElm(selector: string): Promise<Element> {
+  return new Promise(resolve => {
+    const existing = document.querySelector(selector)
+    if (existing) { resolve(existing); return }
+
+    const observer = new MutationObserver(() => {
+      const el = document.querySelector(selector)
+      if (el) { observer.disconnect(); resolve(el) }
+    })
+    observer.observe(document.body, { childList: true, subtree: true })
+  })
+}
+
 function resolveTmdbId(): { tmdbId: number; mediaType: 'movie' | 'tv' } | null {
   // Primary: body data attributes
   const id = document.body.dataset['tmdbId']
@@ -42,36 +55,95 @@ const WIDGET_HOST_ID = 'seerr-helper-root'
 function createWidgetHost(): { host: HTMLLIElement; shadow: ShadowRoot } {
   const host = document.createElement('li')
   host.id = WIDGET_HOST_ID
-  const shadow = host.attachShadow({ mode: 'open' })
+  const shadowContainer = document.createElement('div')
+  host.appendChild(shadowContainer)
+  const shadow = shadowContainer.attachShadow({ mode: 'open' })
   return { host, shadow }
 }
 
 function widgetCSS(): string {
   return `
-    .seerr-widget { display: flex; flex-direction: column; gap: 6px; padding: 4px 0; }
-    .seerr-row { display: flex; align-items: center; gap: 8px; }
-    .seerr-quality-label { font-size: 11px; color: #89a; min-width: 24px; text-transform: uppercase; letter-spacing: 0.05em; }
-    .seerr-btn {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 4px 10px; border-radius: 3px; border: none;
-      font-size: 12px; font-weight: 600; cursor: pointer; color: #fff;
-      background: #445566; transition: opacity 0.15s;
+    :host { display: block; }
+    .seerr-widget {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-family: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif;
+      font-size: 13px;
+      padding: 0 12px;
     }
+    .seerr-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .seerr-col {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .seerr-col-label {
+      color: #bbccdd;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      opacity: 0.7;
+    }
+    .seerr-col-sub {
+      font-size: 11px;
+      color: #bbccdd;
+      opacity: 0.55;
+    }
+    .seerr-col-sub:empty { display: none; }
+    .seerr-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 3px 7px;
+      border-radius: 3px;
+      border: none;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.6;
+      cursor: pointer;
+      background: #445566;
+      color: #fff;
+      transition: opacity 0.15s;
+    }
+    .seerr-btn:hover:not(:disabled) { filter: brightness(1.2); }
+    .seerr-btn:active:not(:disabled) { filter: brightness(0.9); }
     .seerr-btn:disabled { opacity: 0.5; cursor: default; }
-    .seerr-btn--requestable      { background: #2c7be5; }
-    .seerr-btn--requesting       { background: #2c7be5; opacity: 0.6; }
-    .seerr-btn--success          { background: #28a745; }
-    .seerr-btn--pending-approval { background: #b8860b; }
-    .seerr-btn--approved         { background: #2c7be5; }
-    .seerr-btn--declined         { background: #c0392b; }
-    .seerr-btn--failed           { background: #c0392b; }
-    .seerr-btn--processing       { background: #b8860b; }
-    .seerr-btn--partial          { background: #e67e22; }
-    .seerr-btn--available        { background: #28a745; }
-    .seerr-btn--blocklisted      { background: #556; }
-    .seerr-btn--not-configured   { background: #556; }
-    .seerr-btn--error            { background: #c0392b; }
-    .seerr-btn--loading          { background: #445566; }
+    /* action states */
+    .seerr-btn--requestable    { background: #2c7be5; color: #fff; }
+    .seerr-btn--requesting     { background: #2c7be5; color: #fff; opacity: 0.6; }
+    .seerr-btn--success        { background: #22c55e; color: #dcfce7; }
+    /* status states — canonical badge colors from status-codes-reference.md */
+    .seerr-btn--pending-approval { background: #eab308; color: #fef9c3; }
+    .seerr-btn--approved         { background: #22c55e; color: #dcfce7; }
+    .seerr-btn--declined         { background: #dc2626; color: #fee2e2; }
+    .seerr-btn--failed           { background: #dc2626; color: #fee2e2; }
+    .seerr-btn--processing       { background: #6366f1; color: #e0e7ff; }
+    .seerr-btn--partial          { background: #22c55e; color: #dcfce7; }
+    .seerr-btn--available        { background: #22c55e; color: #dcfce7; }
+    .seerr-btn--blocklisted      { background: #dc2626; color: #fee2e2; }
+    /* utility states */
+    .seerr-btn--not-configured { background: #445566; color: #bbccdd; }
+    .seerr-btn--error          { background: #dc2626; color: #fee2e2; }
+    .seerr-btn--loading        { background: transparent; color: #bbccdd; padding: 0; }
+    .seerr-releases {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+    .seerr-releases:empty { display: none; }
+    .seerr-release {
+      font-size: 11px;
+      color: #bbccdd;
+      opacity: 0.5;
+    }
   `
 }
 
@@ -83,12 +155,12 @@ const STATE_LABELS: Record<ExtendedUiState, string> = {
   'requestable':      'Request',
   'requesting':       'Requesting…',
   'success':          '✓ Requested',
-  'pending-approval': 'Pending Approval',
+  'pending-approval': 'Pending',
   'approved':         'Approved',
   'declined':         'Declined',
   'failed':           'Failed',
-  'processing':       'Processing',
-  'partial':          'Partial',
+  'processing':       'Requested',
+  'partial':          'Partially Available',
   'available':        'Available',
   'blocklisted':      'Blocklisted',
   'error':            'Error',
@@ -113,8 +185,8 @@ async function init(): Promise<void> {
   // Avoid double-injection
   if (document.getElementById(WIDGET_HOST_ID)) return
 
-  const panel = document.querySelector('ul.js-actions-panel')
-  if (!panel) return
+  // Wait for the React-rendered actions panel to appear in the DOM
+  const panel = await waitForElm('ul.js-actions-panel')
 
   const resolved = resolveTmdbId()
   if (!resolved) return
@@ -135,21 +207,33 @@ async function init(): Promise<void> {
   const fourKBtn = document.createElement('button')
   fourKBtn.className = 'seerr-btn'
 
-  const hdRow = document.createElement('div')
-  hdRow.className = 'seerr-row'
+  const grid = document.createElement('div')
+  grid.className = 'seerr-grid'
+
+  const hdCol = document.createElement('div')
+  hdCol.className = 'seerr-col'
   const hdLabel = document.createElement('span')
-  hdLabel.className = 'seerr-quality-label'
+  hdLabel.className = 'seerr-col-label'
   hdLabel.textContent = 'HD'
-  hdRow.append(hdLabel, hdBtn)
+  const hdSub = document.createElement('span')
+  hdSub.className = 'seerr-col-sub'
+  hdCol.append(hdLabel, hdBtn, hdSub)
 
-  const fourKRow = document.createElement('div')
-  fourKRow.className = 'seerr-row'
+  const fourKCol = document.createElement('div')
+  fourKCol.className = 'seerr-col'
   const fourKLabel = document.createElement('span')
-  fourKLabel.className = 'seerr-quality-label'
+  fourKLabel.className = 'seerr-col-label'
   fourKLabel.textContent = '4K'
-  fourKRow.append(fourKLabel, fourKBtn)
+  const fourKSub = document.createElement('span')
+  fourKSub.className = 'seerr-col-sub'
+  fourKCol.append(fourKLabel, fourKBtn, fourKSub)
 
-  widget.append(hdRow, fourKRow)
+  grid.append(hdCol, fourKCol)
+
+  const releasesEl = document.createElement('div')
+  releasesEl.className = 'seerr-releases'
+
+  widget.append(grid, releasesEl)
   shadow.append(style, widget)
   panel.appendChild(host)
 
@@ -175,12 +259,23 @@ async function init(): Promise<void> {
   }
 
   // Fetch initial status
-  await refreshStatus(tmdbId, mediaType, baseUrl, hdBtn, fourKBtn)
+  await refreshStatus(tmdbId, mediaType, baseUrl, hdBtn, hdSub, fourKBtn, fourKSub, releasesEl)
+}
 
-  // Clean up injected elements when extension is disabled or reloaded (inject-cleanup)
-  chrome.runtime.connect({ name: 'seerr-helper' }).onDisconnect.addListener(() => {
-    document.getElementById(WIDGET_HOST_ID)?.remove()
-  })
+function populateReleases(el: HTMLDivElement, digital: string | null, physical: string | null): void {
+  el.textContent = ''
+  if (digital) {
+    const span = document.createElement('span')
+    span.className = 'seerr-release'
+    span.textContent = `Digital \u00b7 ${digital}`
+    el.appendChild(span)
+  }
+  if (physical) {
+    const span = document.createElement('span')
+    span.className = 'seerr-release'
+    span.textContent = `Physical \u00b7 ${physical}`
+    el.appendChild(span)
+  }
 }
 
 async function refreshStatus(
@@ -188,7 +283,10 @@ async function refreshStatus(
   mediaType: 'movie' | 'tv',
   baseUrl: string,
   hdBtn: HTMLButtonElement,
-  fourKBtn: HTMLButtonElement
+  hdSub: HTMLSpanElement,
+  fourKBtn: HTMLButtonElement,
+  fourKSub: HTMLSpanElement,
+  releasesEl: HTMLDivElement
 ): Promise<void> {
   const resp = await sendMessage({ type: 'GET_MEDIA_STATUS', tmdbId, mediaType })
 
@@ -202,27 +300,38 @@ async function refreshStatus(
 
   applyButtonState(hdBtn, resp.hd)
   applyButtonState(fourKBtn, resp.fourK)
+  hdSub.textContent = resp.hdInfo ? `by ${resp.hdInfo}` : ''
+  fourKSub.textContent = resp.fourKInfo ? `by ${resp.fourKInfo}` : ''
+  populateReleases(releasesEl, resp.digitalRelease, resp.physicalRelease)
   const mediaId = resp.mediaId
 
-  attachClickHandler(hdBtn, resp.hd, false, tmdbId, mediaType, mediaId, baseUrl, fourKBtn)
-  attachClickHandler(fourKBtn, resp.fourK, true, tmdbId, mediaType, mediaId, baseUrl, hdBtn)
+  attachClickHandler(hdBtn, hdSub, resp.hd, false, tmdbId, mediaType, mediaId, baseUrl, fourKBtn, fourKSub)
+  attachClickHandler(fourKBtn, fourKSub, resp.fourK, true, tmdbId, mediaType, mediaId, baseUrl, hdBtn, hdSub)
 }
 
 function attachClickHandler(
   btn: HTMLButtonElement,
+  sub: HTMLSpanElement,
   state: UiState,
   is4k: boolean,
   tmdbId: number,
   mediaType: 'movie' | 'tv',
   mediaId: number,
   baseUrl: string,
-  otherBtn: HTMLButtonElement
+  otherBtn: HTMLButtonElement,
+  otherSub: HTMLSpanElement
 ): void {
   // Stateless actions: open Overseerr
   const linkOutStates: UiState[] = ['pending-approval', 'approved', 'processing', 'partial', 'available', 'blocklisted']
   if (linkOutStates.includes(state)) {
+    btn.addEventListener('mouseenter', () => {
+      btn.textContent = 'Open'
+    })
+    btn.addEventListener('mouseleave', () => {
+      btn.textContent = STATE_LABELS[state]
+    })
     btn.addEventListener('click', () => {
-      window.open(`${baseUrl}/movie/${mediaId}`, '_blank', 'noopener')
+      window.open(`${baseUrl}/movie/${tmdbId}`, '_blank', 'noopener')
     }, { once: true })
     return
   }
@@ -246,8 +355,12 @@ function attachClickHandler(
       if ('hd' in resp) {
         applyButtonState(btn, is4k ? resp.fourK : resp.hd)
         applyButtonState(otherBtn, is4k ? resp.hd : resp.fourK)
-        attachClickHandler(btn, is4k ? resp.fourK : resp.hd, is4k, tmdbId, mediaType, resp.mediaId, baseUrl, otherBtn)
-        attachClickHandler(otherBtn, is4k ? resp.hd : resp.fourK, !is4k, tmdbId, mediaType, resp.mediaId, baseUrl, btn)
+        const info = is4k ? resp.fourKInfo : resp.hdInfo
+        const otherInfo = is4k ? resp.hdInfo : resp.fourKInfo
+        sub.textContent = info ? `by ${info}` : ''
+        otherSub.textContent = otherInfo ? `by ${otherInfo}` : ''
+        attachClickHandler(btn, sub, is4k ? resp.fourK : resp.hd, is4k, tmdbId, mediaType, resp.mediaId, baseUrl, otherBtn, otherSub)
+        attachClickHandler(otherBtn, otherSub, is4k ? resp.hd : resp.fourK, !is4k, tmdbId, mediaType, resp.mediaId, baseUrl, btn, sub)
       }
     }, { once: true })
   }

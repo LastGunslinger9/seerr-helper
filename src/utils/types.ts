@@ -37,6 +37,7 @@ export interface MediaRequest {
   status: RequestStatus
   is4k: boolean
   createdAt: string
+  requestedBy?: { displayName?: string; username: string }
 }
 
 // Shape of the mediaInfo object from GET /movie/{tmdbId}
@@ -56,6 +57,6 @@ export type MessageRequest =
 
 // Responses from background → content script
 export type MessageResponse =
-  | { ok: true; hd: UiState; fourK: UiState; mediaId: number }
+  | { ok: true; hd: UiState; fourK: UiState; mediaId: number; hdInfo: string | null; fourKInfo: string | null; digitalRelease: string | null; physicalRelease: string | null }
   | { ok: true; baseUrl: string }
   | { ok: false; error: 'NOT_CONFIGURED' | 'NOT_FOUND' | 'API_ERROR'; message: string }
