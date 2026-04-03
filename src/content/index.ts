@@ -184,24 +184,24 @@ function widgetCSS(): string {
       &:hover:not(:disabled)  { filter: brightness(1.2); }
       &:active:not(:disabled) { filter: brightness(0.9); }
       &:disabled { opacity: 0.5; cursor: default; }
-      /* action states */
-      &--requestable { background: #2c7be5; color: #fff; }
-      &--requesting  { background: #2c7be5; color: #fff; opacity: 0.6; }
-      &--success     { background: #22c55e; color: #dcfce7; }
-      /* status states — canonical badge colors from status-codes-reference.md */
-      &--pending-approval { background: #eab308; color: #fef9c3; }
-      &--approved         { background: #22c55e; color: #dcfce7; }
-      &--declined         { background: #dc2626; color: #fee2e2; }
-      &--failed           { background: #dc2626; color: #fee2e2; }
-      &--processing       { background: #6366f1; color: #e0e7ff; }
-      &--partial          { background: #22c55e; color: #dcfce7; }
-      &--available        { background: #22c55e; color: #dcfce7; }
-      &--blocklisted      { background: #dc2626; color: #fee2e2; }
-      /* utility states */
-      &--not-configured { background: var(--seerr-surface); color: var(--seerr-text); }
-      &--error          { background: #dc2626; color: #fee2e2; }
-      &--loading        { background: transparent; color: var(--seerr-text); padding: 0; }
     }
+    /* action states */
+    .seerr-btn--requestable { background: #2c7be5; color: #fff; }
+    .seerr-btn--requesting  { background: #2c7be5; color: #fff; opacity: 0.6; }
+    .seerr-btn--success     { background: #22c55e; color: #dcfce7; }
+    /* status states — canonical badge colors from status-codes-reference.md */
+    .seerr-btn--pending-approval { background: #eab308; color: #fef9c3; }
+    .seerr-btn--approved         { background: #22c55e; color: #dcfce7; }
+    .seerr-btn--declined         { background: #dc2626; color: #fee2e2; }
+    .seerr-btn--failed           { background: #dc2626; color: #fee2e2; }
+    .seerr-btn--processing       { background: #6366f1; color: #e0e7ff; }
+    .seerr-btn--partial          { background: #22c55e; color: #dcfce7; }
+    .seerr-btn--available        { background: #22c55e; color: #dcfce7; }
+    .seerr-btn--blocklisted      { background: #dc2626; color: #fee2e2; }
+    /* utility states */
+    .seerr-btn--not-configured { background: var(--seerr-surface); color: var(--seerr-text); }
+    .seerr-btn--error          { background: #dc2626; color: #fee2e2; }
+    .seerr-btn--loading        { background: transparent; color: var(--seerr-text); padding: 0; }
   `
 }
 
