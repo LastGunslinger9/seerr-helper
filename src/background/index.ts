@@ -45,7 +45,7 @@ function extractReleaseDate(results: ReleaseResult[], type: number): string | nu
   const entry = us.release_dates.find(d => d.type === type)
   if (!entry?.release_date) return null
   return new Date(entry.release_date).toLocaleDateString('en-US', {
-    month: 'short', day: 'numeric', timeZone: 'UTC',
+    month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC',
   })
 }
 
@@ -58,7 +58,7 @@ function extractTheatricalRelease(results: ReleaseResult[]): string | null {
   if (!entry) entry = us.release_dates.find(d => d.type === TMDB_RELEASE_THEATRICAL_LIMITED)
   if (!entry?.release_date) return null
   return new Date(entry.release_date).toLocaleDateString('en-US', {
-    month: 'short', day: 'numeric', timeZone: 'UTC',
+    month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC',
   })
 }
 

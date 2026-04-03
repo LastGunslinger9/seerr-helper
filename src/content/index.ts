@@ -258,12 +258,9 @@ async function init(): Promise<void> {
   releasesStyle.textContent = releasesPanelCSS()
   const releasesContainer = document.createElement('div')
   releasesContainer.className = 'seerr-releases-container'
-  const releasesLabel = document.createElement('span')
-  releasesLabel.className = 'seerr-release-label'
-  releasesLabel.textContent = 'Release Dates'
   const releasesGrid = document.createElement('div')
   releasesGrid.className = 'seerr-releases-grid'
-  releasesContainer.append(releasesLabel, releasesGrid)
+  releasesContainer.append(releasesGrid)
   releasesShadow.append(releasesStyle, releasesContainer)
 
   const style = document.createElement('style')
