@@ -266,7 +266,9 @@ function applyButtonState(btn: HTMLButtonElement, state: ExtendedUiState): void 
     .filter(c => c.startsWith(prefix))
     .forEach(c => btn.classList.remove(c))
   btn.classList.add(`${prefix}${state}`)
-  const icon = BUTTON_ICON[state]
+  const icon: string | undefined = (state as string) in BUTTON_ICON
+    ? BUTTON_ICON[state as Exclude<ExtendedUiState, 'loading'>]
+    : undefined
   const label = STATE_LABELS[state]
   if (icon) {
     const spinClass = state === 'requesting' ? ' seerr-icon--spin' : ''
@@ -288,9 +290,7 @@ async function init(): Promise<void> {
   const panel = await waitForElm('ul.js-actions-panel')
 
   // Check if user wants to hide the sharing panel
-  const stored = await new Promise<Record<string, unknown>>(resolve => {
-    chrome.storage.sync.get(['hide_sharing_panel'], resolve)
-  })
+  const stored = await chrome.storage.sync.get(['hide_sharing_panel'])
   if (stored['hide_sharing_panel']) {
     const sharingPanel = panel.querySelector('li.panel-sharing')
     if (sharingPanel) {
@@ -399,13 +399,23 @@ function populateReleasesPanel(
       if (!date) continue
       const item = document.createElement('span')
       item.className = 'seerr-release-item'
-      item.innerHTML = `<i class="${RELEASE_ICON[key]} seerr-icon" aria-hidden="true"></i><span>${date}</span>`
+      const iconEl = document.createElement('i')
+      iconEl.className = `${RELEASE_ICON[key]} seerr-icon`
+      iconEl.setAttribute('aria-hidden', 'true')
+      const spanEl = document.createElement('span')
+      spanEl.textContent = date
+      item.append(iconEl, spanEl)
       container.appendChild(item)
     }
   } else {
     const item = document.createElement('span')
     item.className = 'seerr-release-item'
-    item.innerHTML = `<i class="${RELEASE_ICON.none} seerr-icon" aria-hidden="true"></i><span>No release dates</span>`
+    const iconEl = document.createElement('i')
+    iconEl.className = `${RELEASE_ICON.none} seerr-icon`
+    iconEl.setAttribute('aria-hidden', 'true')
+    const spanEl = document.createElement('span')
+    spanEl.textContent = 'No release dates'
+    item.append(iconEl, spanEl)
     container.appendChild(item)
   }
 }
