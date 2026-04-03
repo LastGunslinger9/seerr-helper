@@ -155,8 +155,10 @@ function widgetCSS(): string {
       gap: 3px;
     }
     .seerr-col-label {
+      display: flex;
       color: var(--seerr-text);
-      font-size: 22px;
+      font-size: 42px;
+      line-height: 1;
       opacity: 0.7;
     }
     .seerr-col-sub {
