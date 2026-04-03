@@ -36,7 +36,7 @@
   "web_accessible_resources": [
     {
       "resources": ["icons/remixicon/remixicon.woff2"],
-      "matches": ["<all_urls>"]
+      "matches": ["https://letterboxd.com/*"]
     }
   ]
 }
