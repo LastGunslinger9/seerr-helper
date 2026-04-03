@@ -321,22 +321,6 @@ async function init(): Promise<void> {
   await refreshStatus(tmdbId, mediaType, baseUrl, hdBtn, hdSub, fourKBtn, fourKSub, releasesGrid)
 }
 
-function populateReleases(el: HTMLDivElement, digital: string | null, physical: string | null): void {
-  el.textContent = ''
-  if (digital) {
-    const span = document.createElement('span')
-    span.className = 'seerr-release'
-    span.textContent = `Digital \u00b7 ${digital}`
-    el.appendChild(span)
-  }
-  if (physical) {
-    const span = document.createElement('span')
-    span.className = 'seerr-release'
-    span.textContent = `Physical \u00b7 ${physical}`
-    el.appendChild(span)
-  }
-}
-
 function populateReleasesPanel(
   container: HTMLDivElement,
   theatrical: string | null,
