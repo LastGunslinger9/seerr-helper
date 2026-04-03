@@ -34,6 +34,8 @@ function formatRequesterName(requests: MediaRequest[]): string | null {
   return latest.requestedBy?.displayName ?? latest.requestedBy?.username ?? null
 }
 
+const TMDB_RELEASE_THEATRICAL_WIDE = 3
+const TMDB_RELEASE_THEATRICAL_LIMITED = 2
 const TMDB_RELEASE_DIGITAL = 4
 const TMDB_RELEASE_PHYSICAL = 5
 
@@ -47,14 +49,28 @@ function extractReleaseDate(results: ReleaseResult[], type: number): string | nu
   })
 }
 
+function extractTheatricalRelease(results: ReleaseResult[]): string | null {
+  const us = results.find(r => r.iso_3166_1 === 'US')
+  if (!us) return null
+  // Try wide theatrical first
+  let entry = us.release_dates.find(d => d.type === TMDB_RELEASE_THEATRICAL_WIDE)
+  // Fallback to limited theatrical
+  if (!entry) entry = us.release_dates.find(d => d.type === TMDB_RELEASE_THEATRICAL_LIMITED)
+  if (!entry?.release_date) return null
+  return new Date(entry.release_date).toLocaleDateString('en-US', {
+    month: 'short', day: 'numeric', timeZone: 'UTC',
+  })
+}
+
 function resolveFromMediaInfo(
   mediaInfo: MediaInfo | null,
   releases: ReleaseResult[]
-): { hd: UiState; fourK: UiState; mediaId: number; hdInfo: string | null; fourKInfo: string | null; digitalRelease: string | null; physicalRelease: string | null } {
+): { hd: UiState; fourK: UiState; mediaId: number; hdInfo: string | null; fourKInfo: string | null; theatricalRelease: string | null; digitalRelease: string | null; physicalRelease: string | null } {
+  const theatricalRelease = extractTheatricalRelease(releases)
   const digitalRelease = extractReleaseDate(releases, TMDB_RELEASE_DIGITAL)
   const physicalRelease = extractReleaseDate(releases, TMDB_RELEASE_PHYSICAL)
   if (!mediaInfo) {
-    return { hd: resolveUiState(undefined, []), fourK: resolveUiState(undefined, []), mediaId: 0, hdInfo: null, fourKInfo: null, digitalRelease, physicalRelease }
+    return { hd: resolveUiState(undefined, []), fourK: resolveUiState(undefined, []), mediaId: 0, hdInfo: null, fourKInfo: null, theatricalRelease, digitalRelease, physicalRelease }
   }
   const hdRequests = (mediaInfo.requests ?? []).filter(r => !r.is4k)
   const fourKRequests = (mediaInfo.requests ?? []).filter(r => r.is4k)
@@ -64,6 +80,7 @@ function resolveFromMediaInfo(
     mediaId: mediaInfo.id,
     hdInfo: formatRequesterName(hdRequests),
     fourKInfo: formatRequesterName(fourKRequests),
+    theatricalRelease,
     digitalRelease,
     physicalRelease,
   }
