@@ -243,6 +243,20 @@ async function init(): Promise<void> {
   // Create and inject the widget
   const { host, shadow } = createWidgetHost()
 
+  // Create releases panel
+  const { host: releasesHost, shadow: releasesShadow } = createReleasesPanelHost()
+  const releasesStyle = document.createElement('style')
+  releasesStyle.textContent = releasesPanelCSS()
+  const releasesContainer = document.createElement('div')
+  releasesContainer.className = 'seerr-releases-container'
+  const releasesLabel = document.createElement('span')
+  releasesLabel.className = 'seerr-release-label'
+  releasesLabel.textContent = 'Release Dates'
+  const releasesGrid = document.createElement('div')
+  releasesGrid.className = 'seerr-releases-grid'
+  releasesContainer.append(releasesLabel, releasesGrid)
+  releasesShadow.append(releasesStyle, releasesContainer)
+
   const style = document.createElement('style')
   style.textContent = widgetCSS()
 
@@ -277,11 +291,9 @@ async function init(): Promise<void> {
 
   grid.append(hdCol, fourKCol)
 
-  const releasesEl = document.createElement('div')
-  releasesEl.className = 'seerr-releases'
-
-  widget.append(grid, releasesEl)
+  widget.append(grid)
   shadow.append(style, widget)
+  panel.appendChild(releasesHost)
   panel.appendChild(host)
 
   // Show loading state
@@ -306,7 +318,7 @@ async function init(): Promise<void> {
   }
 
   // Fetch initial status
-  await refreshStatus(tmdbId, mediaType, baseUrl, hdBtn, hdSub, fourKBtn, fourKSub, releasesEl)
+  await refreshStatus(tmdbId, mediaType, baseUrl, hdBtn, hdSub, fourKBtn, fourKSub, releasesGrid)
 }
 
 function populateReleases(el: HTMLDivElement, digital: string | null, physical: string | null): void {
