@@ -32,5 +32,11 @@
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     }
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/remixicon/remixicon.woff2"],
+      "matches": ["*://letterboxd.com/*"]
+    }
+  ]
 }
