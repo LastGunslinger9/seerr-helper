@@ -158,7 +158,10 @@ function widgetCSS(): string {
       display: flex;
       justify-content: center;
       color: var(--seerr-text);
-      font-size: 42px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
       line-height: 1;
       opacity: 0.7;
     }
@@ -343,7 +346,7 @@ async function init(): Promise<void> {
   hdCol.className = 'seerr-col'
   const hdLabel = document.createElement('span')
   hdLabel.className = 'seerr-col-label'
-  hdLabel.innerHTML = `<i class="${QUALITY_ICON['hd']} seerr-icon" aria-hidden="true"></i>`
+  hdLabel.textContent = 'HD'
   const hdSub = document.createElement('span')
   hdSub.className = 'seerr-col-sub'
   hdCol.append(hdLabel, hdBtn, hdSub)
@@ -352,7 +355,7 @@ async function init(): Promise<void> {
   fourKCol.className = 'seerr-col'
   const fourKLabel = document.createElement('span')
   fourKLabel.className = 'seerr-col-label'
-  fourKLabel.innerHTML = `<i class="${QUALITY_ICON['4k']} seerr-icon" aria-hidden="true"></i>`
+  fourKLabel.textContent = '4K'
   const fourKSub = document.createElement('span')
   fourKSub.className = 'seerr-col-sub'
   fourKCol.append(fourKLabel, fourKBtn, fourKSub)
