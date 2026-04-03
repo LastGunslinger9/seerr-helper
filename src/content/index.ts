@@ -185,6 +185,11 @@ function releasesPanelCSS(): string {
       color: #bbccdd;
       line-height: 18px;
     }
+    .seerr-releases-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
     .seerr-release-label {
       color: #bbccdd;
       font-size: 11px;
@@ -195,6 +200,7 @@ function releasesPanelCSS(): string {
       margin-bottom: 2px;
     }
     .seerr-release-item {
+      display: block;
       font-size: 13px;
       color: #bbccdd;
       opacity: 1;
