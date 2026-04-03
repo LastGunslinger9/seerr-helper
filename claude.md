@@ -1,6 +1,6 @@
 # seerr-helper
 
-A Chrome extension that enhances Letterboxd movie pages by displaying Overseerr/Jellyseerr request status and availability, with a one-click request button injected directly into the page.
+A Chrome extension that enhances Letterboxd movie pages by displaying Overseerr/Jellyseerr request status and availability, with per-quality (HD/4K) request buttons injected directly into the Letterboxd sidebar panel.
 
 ## Project Overview
 
@@ -9,70 +9,103 @@ A Chrome extension that enhances Letterboxd movie pages by displaying Overseerr/
 - **Integration**: Overseerr / Jellyseerr REST API (OpenAPI spec in `external-references/seerr-api.yml`)
 - **Language**: TypeScript
 - **Build tool**: Vite
+- **Tests**: Jest + ts-jest
+
+## Commands
+
+```
+npm run build   # compile to dist/
+npm test        # run Jest test suite
+```
+
+> Load the extension by pointing Chrome's "Load unpacked" at `dist/`.
 
 ## How It Works
 
-1. Content script runs on Letterboxd film pages
-2. Scrapes the movie title / TMDB ID from the page
-3. Queries the user-configured Overseerr/Jellyseerr instance via the background service worker
-4. Injects a status badge and request button into the Letterboxd UI using Shadow DOM
+1. Content script runs on Letterboxd film pages at `document_idle`
+2. Uses a MutationObserver to wait for the React-rendered sidebar (`ul.js-actions-panel`)
+3. Resolves the TMDB ID from page data attributes or a fallback outbound link
+4. Sends messages to the background service worker, which queries the Seerr API
+5. Injects a widget into the sidebar using Shadow DOM
 
-## Key Integration Points
+## Architecture
 
-- **Seerr API base URL** and **API key** are stored in `chrome.storage.local` (configured via options page)
-- API calls are made from the **background service worker** to avoid CORS issues
-- Content script communicates with the background via `chrome.runtime.sendMessage`
+```
+content script  ──sendMessage──▶  background service worker  ──fetch──▶  Seerr API
+      ▲                                      │
+      └─────────────── response ─────────────┘
+```
+
+- **CORS**: All `fetch` calls happen in the background service worker, never the content script
+- **Storage**: `chrome.storage.sync` holds `seerr_base_url` and `seerr_api_key`
+- **Shadow DOM**: Widget is scoped inside a shadow root to prevent style leakage
 
 ## Project Structure
 
 ```
 seerr-helper/
-├── manifest.json
+├── public/
+│   └── manifest.json
 ├── src/
-│   ├── content/          # Injected into letterboxd.com/film/* pages
-│   ├── background/       # Service worker — API calls, storage
-│   ├── options/          # Settings page (API URL, API key)
-│   └── utils/            # Shared types and helpers
-├── icons/
+│   ├── content/          # Widget UI, Shadow DOM injection
+│   ├── background/       # Service worker — API calls, message handling
+│   ├── options/          # Settings page (base URL + API key)
+│   └── utils/
+│       ├── types.ts          # Shared types: UiState, media/request shapes, messages
+│       └── resolveUiState.ts # Pure fn: (mediaStatus, requests[]) → UiState
 ├── external-references/
-│   └── seerr-api.yml     # Overseerr OpenAPI spec
+│   ├── seerr-api.yml              # Overseerr OpenAPI spec
+│   └── status-codes-reference.md  # Canonical badge colors
 └── vite.config.ts
 ```
+
+## Key Concepts
+
+### UiState
+A single resolved display state per quality tier, derived by `resolveUiState()` from the raw Seerr API response. Current values: `requestable | pending-approval | approved | declined | failed | processing | partial | available | blocklisted`.
+
+### Message passing
+Content script ↔ background communicate via typed `MessageRequest` / `MessageResponse` discriminated unions defined in `src/utils/types.ts`. To add new data to a response, update the relevant union variant **and** the background handler.
+
+### Widget states
+Content script adds its own transient states on top of `UiState`: `loading | not-configured | requesting | success | error`. These never leave the content script.
+
+## Seerr API Notes
+
+- `GET /api/v1/movie/{tmdbId}` — returns `mediaInfo` (status, status4k, requests[]) and `releases`
+- `POST /api/v1/request` — body: `{ mediaType, mediaId: tmdbId, is4k }`
+- Auth via `X-Api-Key` header
+- Release date types in `releases.results[].release_dates[].type`: `4` = Digital, `5` = Physical
 
 ## Available Skills
 
 ### Chrome Extension
 
-| Skill | Source | Purpose |
-|---|---|---|
-| `chrome-extension-development` | mindrally/skills | MV3 architecture, Chrome APIs, service workers, security |
-| `browser-extension-builder` | sickn33/antigravity-awesome-skills | Project structure, manifest template, content script patterns |
-| `chrome-extension-ui` | pproenca/dot-skills | Shadow DOM injection, popup/content script UI rules, accessibility |
+| Skill | Purpose |
+|---|---|
+| `chrome-extension-development` | MV3 architecture, Chrome APIs, service workers, security |
+| `browser-extension-builder` | Project structure, manifest, content script patterns |
+| `chrome-extension-ui` | Shadow DOM injection, popup/content script UI, accessibility |
 
-### TypeScript & Code Quality
+### TypeScript & Testing
 
-| Skill | Source | Purpose |
-|---|---|---|
-| `typescript-advanced-types` | wshobson/agents | Type-safe API client, discriminated unions, generics, utility types |
-
-### Testing
-
-| Skill | Source | Purpose |
-|---|---|---|
-| `javascript-typescript-jest` | github/awesome-copilot | Unit and integration testing with Jest |
-| `webapp-testing` | anthropics/skills | E2E and UI testing patterns |
+| Skill | Purpose |
+|---|---|
+| `typescript-advanced-types` | Type-safe API client, discriminated unions, utility types |
+| `javascript-typescript-jest` | Jest unit and integration testing |
+| `webapp-testing` | E2E and UI testing patterns |
 
 ### Agent Workflow
 
-| Skill | Source | Purpose |
-|---|---|---|
-| `brainstorming` | obra/superpowers | Explore intent and requirements before implementation |
-| `writing-plans` | obra/superpowers | Write structured implementation plans before touching code |
-| `executing-plans` | obra/superpowers | Execute written plans with review checkpoints |
-| `subagent-driven-development` | obra/superpowers | Run independent tasks in parallel via subagents |
-| `dispatching-parallel-agents` | obra/superpowers | Coordinate 2+ independent tasks without shared state |
-| `requesting-code-review` | obra/superpowers | Verify work meets requirements before merging |
-| `receiving-code-review` | obra/superpowers | Evaluate and respond to code review feedback rigorously |
-| `verification-before-completion` | obra/superpowers | Run verification commands before claiming work is done |
-| `using-superpowers` | obra/superpowers | Establish how to find and invoke skills at session start |
-| `find-skills` | vercel-labs/skills | Discover and install new skills via `npx skills find` |
+| Skill | Purpose |
+|---|---|
+| `brainstorming` | Explore intent and requirements before implementation |
+| `writing-plans` | Write structured plans before touching code |
+| `executing-plans` | Execute plans with review checkpoints |
+| `subagent-driven-development` | Run independent tasks in parallel |
+| `dispatching-parallel-agents` | Coordinate 2+ independent tasks without shared state |
+| `requesting-code-review` | Verify work meets requirements before merging |
+| `receiving-code-review` | Evaluate and respond to code review feedback |
+| `verification-before-completion` | Run verification commands before claiming work is done |
+| `using-superpowers` | Establish how to find and invoke skills at session start |
+| `find-skills` | Discover and install new skills via `npx skills find` |
