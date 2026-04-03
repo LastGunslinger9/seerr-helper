@@ -169,13 +169,21 @@ function widgetCSS(): string {
 
 function releasesPanelCSS(): string {
   return `
-    :host { display: block; }
+    :host { 
+      display: grid; 
+      padding: 10px 0;
+      background: #445566;
+      border-bottom: 1px solid #2c3440;
+    }
     .seerr-releases-container {
       display: flex;
       flex-direction: column;
       gap: 4px;
+      padding: 0 12px;
       font-family: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif;
       font-size: 13px;
+      color: #bbccdd;
+      line-height: 18px;
     }
     .seerr-release-label {
       color: #bbccdd;
@@ -184,12 +192,13 @@ function releasesPanelCSS(): string {
       text-transform: uppercase;
       letter-spacing: 0.06em;
       opacity: 0.7;
+      margin-bottom: 2px;
     }
     .seerr-release-item {
-      font-size: 11px;
+      font-size: 13px;
       color: #bbccdd;
-      opacity: 0.55;
-      line-height: 1.4;
+      opacity: 1;
+      line-height: 18px;
     }
   `
 }
