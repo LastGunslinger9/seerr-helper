@@ -25,7 +25,7 @@ function injectFontFaceToDocument(): void {
 // Glyph classes and utilities injected into each shadow root.
 function buildIconFontCSS(): string {
   return `
-    [class^="ri-"], [class*=" ri-"] {
+    :is([class^="ri-"], [class*=" ri-"]) {
       font-family: 'remixicon' !important;
       font-style: normal;
       -webkit-font-smoothing: antialiased;
@@ -54,8 +54,7 @@ function buildIconFontCSS(): string {
       animation: seerr-spin 1s linear infinite;
     }
     @keyframes seerr-spin {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
+      to { transform: rotate(360deg); }
     }
   `
 }
@@ -132,14 +131,18 @@ function createReleasesPanelHost(): { host: HTMLLIElement; shadow: ShadowRoot } 
 
 function widgetCSS(): string {
   return `
-    :host { display: block; }
+    :host {
+      display: block;
+      --seerr-text: #bbccdd;
+      --seerr-surface: #445566;
+    }
     .seerr-widget {
       display: flex;
       flex-direction: column;
       gap: 6px;
       font-family: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif;
       font-size: 13px;
-      padding: 0 12px;
+      padding-inline: 12px;
     }
     .seerr-grid {
       display: grid;
@@ -152,16 +155,16 @@ function widgetCSS(): string {
       gap: 3px;
     }
     .seerr-col-label {
-      color: #bbccdd;
+      color: var(--seerr-text);
       font-size: 22px;
       opacity: 0.7;
     }
     .seerr-col-sub {
       font-size: 11px;
-      color: #bbccdd;
+      color: var(--seerr-text);
       opacity: 0.55;
+      &:empty { display: none; }
     }
-    .seerr-col-sub:empty { display: none; }
     .seerr-btn {
       display: inline-flex;
       align-items: center;
@@ -175,62 +178,50 @@ function widgetCSS(): string {
       font-weight: 600;
       line-height: 1.6;
       cursor: pointer;
-      background: #445566;
+      background: var(--seerr-surface);
       color: #fff;
-      transition: opacity 0.15s;
-    }
-    .seerr-btn:hover:not(:disabled) { filter: brightness(1.2); }
-    .seerr-btn:active:not(:disabled) { filter: brightness(0.9); }
-    .seerr-btn:disabled { opacity: 0.5; cursor: default; }
-    /* action states */
-    .seerr-btn--requestable    { background: #2c7be5; color: #fff; }
-    .seerr-btn--requesting     { background: #2c7be5; color: #fff; opacity: 0.6; }
-    .seerr-btn--success        { background: #22c55e; color: #dcfce7; }
-    /* status states — canonical badge colors from status-codes-reference.md */
-    .seerr-btn--pending-approval { background: #eab308; color: #fef9c3; }
-    .seerr-btn--approved         { background: #22c55e; color: #dcfce7; }
-    .seerr-btn--declined         { background: #dc2626; color: #fee2e2; }
-    .seerr-btn--failed           { background: #dc2626; color: #fee2e2; }
-    .seerr-btn--processing       { background: #6366f1; color: #e0e7ff; }
-    .seerr-btn--partial          { background: #22c55e; color: #dcfce7; }
-    .seerr-btn--available        { background: #22c55e; color: #dcfce7; }
-    .seerr-btn--blocklisted      { background: #dc2626; color: #fee2e2; }
-    /* utility states */
-    .seerr-btn--not-configured { background: #445566; color: #bbccdd; }
-    .seerr-btn--error          { background: #dc2626; color: #fee2e2; }
-    .seerr-btn--loading        { background: transparent; color: #bbccdd; padding: 0; }
-    .seerr-releases-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      padding: 0 12px;
-    }
-    .seerr-releases-grid:empty { display: none; }
-    .seerr-release-item {
-      font-size: 11px;
-      color: #bbccdd;
-      opacity: 0.5;
-      line-height: 1.4;
+      transition: filter 0.15s;
+      &:hover:not(:disabled)  { filter: brightness(1.2); }
+      &:active:not(:disabled) { filter: brightness(0.9); }
+      &:disabled { opacity: 0.5; cursor: default; }
+      /* action states */
+      &--requestable { background: #2c7be5; color: #fff; }
+      &--requesting  { background: #2c7be5; color: #fff; opacity: 0.6; }
+      &--success     { background: #22c55e; color: #dcfce7; }
+      /* status states — canonical badge colors from status-codes-reference.md */
+      &--pending-approval { background: #eab308; color: #fef9c3; }
+      &--approved         { background: #22c55e; color: #dcfce7; }
+      &--declined         { background: #dc2626; color: #fee2e2; }
+      &--failed           { background: #dc2626; color: #fee2e2; }
+      &--processing       { background: #6366f1; color: #e0e7ff; }
+      &--partial          { background: #22c55e; color: #dcfce7; }
+      &--available        { background: #22c55e; color: #dcfce7; }
+      &--blocklisted      { background: #dc2626; color: #fee2e2; }
+      /* utility states */
+      &--not-configured { background: var(--seerr-surface); color: var(--seerr-text); }
+      &--error          { background: #dc2626; color: #fee2e2; }
+      &--loading        { background: transparent; color: var(--seerr-text); padding: 0; }
     }
   `
 }
 
 function releasesPanelCSS(): string {
   return `
-    :host { 
-      display: grid; 
-      padding: 10px 0;
+    :host {
+      display: grid;
+      padding-block: 10px;
       background: #445566;
       border-bottom: 1px solid #2c3440;
+      --seerr-text: #bbccdd;
     }
     .seerr-releases-container {
       display: flex;
       flex-direction: column;
       gap: 4px;
-      padding: 0 12px;
+      padding-inline: 12px;
       font-family: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif;
       font-size: 13px;
-      color: #bbccdd;
+      color: var(--seerr-text);
       line-height: 18px;
     }
     .seerr-releases-grid {
@@ -244,14 +235,10 @@ function releasesPanelCSS(): string {
     .seerr-release-item {
       display: contents;
       font-size: 13px;
-      color: #bbccdd;
+      color: var(--seerr-text);
       line-height: 18px;
-    }
-    .seerr-release-item > i {
-      justify-self: end;
-    }
-    .seerr-release-item > span {
-      justify-self: start;
+      & > i    { justify-self: end; }
+      & > span { justify-self: start; }
     }
   `
 }
