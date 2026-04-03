@@ -1,5 +1,52 @@
 import { MessageRequest, MessageResponse, UiState, ExtendedUiState } from '../utils/types'
 
+// ── Icon font CSS ────────────────────────────────────────────────────────────
+
+function buildIconFontCSS(): string {
+  const woff2 = chrome.runtime.getURL('icons/remixicon/remixicon.woff2')
+  return `
+    @font-face {
+      font-family: 'remixicon';
+      src: url('${woff2}') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+    }
+    [class^="ri-"], [class*=" ri-"] {
+      font-family: 'remixicon' !important;
+      font-style: normal;
+      -webkit-font-smoothing: antialiased;
+    }
+    /* --- glyph classes --- */
+    .ri-hd-line:before             { content: "\\ee02"; }
+    .ri-4k-line:before             { content: "\\ea04"; }
+    .ri-ticket-line:before         { content: "\\f20d"; }
+    .ri-cloud-line:before          { content: "\\eb9d"; }
+    .ri-dvd-line:before            { content: "\\ec74"; }
+    .ri-calendar-event-line:before { content: "\\eb25"; }
+    .ri-add-circle-line:before     { content: "\\ea11"; }
+    .ri-loader-line:before         { content: "\\eeca"; }
+    .ri-checkbox-line:before       { content: "\\eb85"; }
+    .ri-time-line:before           { content: "\\f20f"; }
+    .ri-close-circle-line:before   { content: "\\eb97"; }
+    .ri-settings-line:before       { content: "\\f0ee"; }
+    /* --- icon utilities --- */
+    .seerr-icon {
+      display: inline-flex;
+      align-items: center;
+      font-size: 1em;
+      line-height: 1;
+      vertical-align: middle;
+    }
+    .seerr-icon--spin {
+      animation: seerr-spin 1s linear infinite;
+    }
+    @keyframes seerr-spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+  `
+}
+
 // ── TMDB ID resolution ───────────────────────────────────────────────────────
 
 function waitForElm(selector: string): Promise<Element> {
@@ -190,20 +237,13 @@ function releasesPanelCSS(): string {
       flex-direction: column;
       gap: 2px;
     }
-    .seerr-release-label {
-      color: #bbccdd;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      opacity: 0.7;
-      margin-bottom: 2px;
-    }
     .seerr-release-item {
-      display: block;
+      display: grid;
+      grid-template-columns: 1.25em 1fr;
+      align-items: center;
+      gap: 4px;
       font-size: 13px;
       color: #bbccdd;
-      opacity: 1;
       line-height: 18px;
     }
   `
@@ -270,7 +310,7 @@ async function init(): Promise<void> {
   // Create releases panel
   const { host: releasesHost, shadow: releasesShadow } = createReleasesPanelHost()
   const releasesStyle = document.createElement('style')
-  releasesStyle.textContent = releasesPanelCSS()
+  releasesStyle.textContent = releasesPanelCSS() + buildIconFontCSS()
   const releasesContainer = document.createElement('div')
   releasesContainer.className = 'seerr-releases-container'
   const releasesGrid = document.createElement('div')
@@ -279,7 +319,7 @@ async function init(): Promise<void> {
   releasesShadow.append(releasesStyle, releasesContainer)
 
   const style = document.createElement('style')
-  style.textContent = widgetCSS()
+  style.textContent = widgetCSS() + buildIconFontCSS()
 
   const widget = document.createElement('div')
   widget.className = 'seerr-widget'
