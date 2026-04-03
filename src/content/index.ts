@@ -1,4 +1,4 @@
-import { MessageRequest, MessageResponse, UiState } from '../utils/types'
+import { MessageRequest, MessageResponse, UiState, ExtendedUiState } from '../utils/types'
 
 // ── TMDB ID resolution ───────────────────────────────────────────────────────
 
@@ -208,8 +208,6 @@ function releasesPanelCSS(): string {
     }
   `
 }
-
-type ExtendedUiState = UiState | 'loading' | 'not-configured' | 'requesting' | 'success' | 'error'
 
 const STATE_LABELS: Record<ExtendedUiState, string> = {
   'loading':          '…',

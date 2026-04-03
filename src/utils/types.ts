@@ -60,3 +60,6 @@ export type MessageResponse =
   | { ok: true; hd: UiState; fourK: UiState; mediaId: number; hdInfo: string | null; fourKInfo: string | null; theatricalRelease: string | null; digitalRelease: string | null; physicalRelease: string | null }
   | { ok: true; baseUrl: string }
   | { ok: false; error: 'NOT_CONFIGURED' | 'NOT_FOUND' | 'API_ERROR'; message: string }
+
+// Extended UI state used only in the content script (adds transient widget states)
+export type ExtendedUiState = UiState | 'loading' | 'not-configured' | 'requesting' | 'success' | 'error'

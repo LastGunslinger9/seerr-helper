@@ -1,3 +1,5 @@
+import type { ExtendedUiState } from '../utils/types'
+
 export const QUALITY_ICON = {
   'hd': 'ri-hd-line',
   '4k': 'ri-4k-line',
@@ -10,7 +12,9 @@ export const RELEASE_ICON = {
   none:       'ri-calendar-event-line',
 } as const
 
-export const BUTTON_ICON: Record<string, string> = {
+type ButtonIconState = Exclude<ExtendedUiState, 'loading'>
+
+export const BUTTON_ICON: Record<ButtonIconState, string> = {
   'requestable':      'ri-add-circle-line',
   'requesting':       'ri-loader-line',
   'success':          'ri-checkbox-line',
@@ -24,5 +28,4 @@ export const BUTTON_ICON: Record<string, string> = {
   'blocklisted':      'ri-close-circle-line',
   'not-configured':   'ri-settings-line',
   'error':            'ri-close-circle-line',
-  // 'loading': no icon - text only
 }
