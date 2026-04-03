@@ -48,7 +48,7 @@ describe('handleMessage', () => {
       }) as unknown as typeof fetch
 
       const result = await handleMessage({ type: 'GET_MEDIA_STATUS', tmdbId: 123, mediaType: 'movie' })
-      expect(result).toEqual({ ok: true, hd: 'available', fourK: 'requestable', mediaId: 42, hdInfo: null, fourKInfo: null, digitalRelease: null, physicalRelease: null })
+      expect(result).toEqual({ ok: true, hd: 'available', fourK: 'requestable', mediaId: 42, hdInfo: null, fourKInfo: null, theatricalRelease: null, digitalRelease: null, physicalRelease: null })
     })
 
     it('returns requestable for both when mediaInfo is absent', async () => {
@@ -58,7 +58,7 @@ describe('handleMessage', () => {
       }) as unknown as typeof fetch
 
       const result = await handleMessage({ type: 'GET_MEDIA_STATUS', tmdbId: 999, mediaType: 'movie' })
-      expect(result).toEqual({ ok: true, hd: 'requestable', fourK: 'requestable', mediaId: 0, hdInfo: null, fourKInfo: null, digitalRelease: null, physicalRelease: null })
+      expect(result).toEqual({ ok: true, hd: 'requestable', fourK: 'requestable', mediaId: 0, hdInfo: null, fourKInfo: null, theatricalRelease: null, digitalRelease: null, physicalRelease: null })
     })
 
     it('returns API_ERROR on fetch failure', async () => {
@@ -96,7 +96,7 @@ describe('handleMessage', () => {
       }) as unknown as typeof fetch
 
       const result = await handleMessage({ type: 'REQUEST_MEDIA', tmdbId: 123, mediaType: 'movie', is4k: false })
-      expect(result).toEqual({ ok: true, hd: 'pending-approval', fourK: 'requestable', mediaId: 42, hdInfo: null, fourKInfo: null, digitalRelease: null, physicalRelease: null })
+      expect(result).toEqual({ ok: true, hd: 'pending-approval', fourK: 'requestable', mediaId: 42, hdInfo: null, fourKInfo: null, theatricalRelease: null, digitalRelease: null, physicalRelease: null })
     })
   })
 })
