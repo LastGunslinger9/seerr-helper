@@ -15,14 +15,23 @@ Not in scope: toolbar icons in `public/icons`, layout changes, state logic chang
 2. Icons render inside Shadow DOM (both widget and releases panel).
 3. Decorative icons: `aria-hidden="true"` on icon spans; `aria-label` on buttons unchanged.
 4. Graceful degradation: if font fails to load, text labels remain readable.
+5. Release rows: icon and date columns are grid-aligned — icons share a fixed-width column, dates start at the same horizontal position.
 
 ## Icon Mapping
 
+### Quality tier labels
+Icons replace the "HD" / "4K" text labels on buttons.
+| Quality | Icon |
+|---------|------|
+| HD | `ri-hd-line` |
+| 4K | `ri-4k-line` |
+
 ### Releases panel
+Icons replace the "Theatrical" / "Digital" / "Physical" text labels.
 | Row | Icon |
 |-----|------|
-| Theatrical | `ri-movie-2-line` |
-| Digital | `ri-download-line` |
+| Theatrical | `ri-ticket-line` |
+| Digital | `ri-cloud-line` |
 | Physical | `ri-dvd-line` |
 | No release dates | `ri-calendar-event-line` |
 
@@ -46,10 +55,10 @@ Bundle under `public/icons/remixicon/`:
 
 ### Content script changes (`src/content/index.ts`)
 1. Add `buildIconFontCSS(): string` — builds `@font-face` CSS with URLs resolved via `chrome.runtime.getURL()`
-2. Add `ICON_MAP: Record<ExtendedUiState | ReleaseType, string>` — maps states/types to icon class names
-3. Add `.seerr-icon` and `.seerr-icon--spin` CSS classes to both `widgetCSS()` and `releasesPanelCSS()`
-4. Update `applyButtonState()` — render `<i class="ri ... seerr-icon" aria-hidden="true"></i> label` instead of text-only
-5. Update `populateReleasesPanel()` — prepend icon span to each release row
+2. Add `ICON_MAP: Record<ExtendedUiState | ReleaseType | Quality, string>` — maps states/types/quality to icon class names
+3. Add `.seerr-icon` and `.seerr-icon--spin` CSS classes to both `widgetCSS()` and `releasesPanelCSS()`; release rows use `display: grid; grid-template-columns: 1.25em 1fr` so icons and dates align across all rows
+4. Update `applyButtonState()` — render `<i class="ri ... seerr-icon" aria-hidden="true"></i> label` instead of text-only; quality tier label ("HD"/"4K") replaced by `<i class="ri-hd-line">` / `<i class="ri-4k-line">`
+5. Update `populateReleasesPanel()` — replace release type text label with icon `<i>`
 
 ### Vite config
 Add `public/icons/remixicon/` to `web_accessible_resources` in `manifest.json` so `chrome.runtime.getURL()` can resolve the font.

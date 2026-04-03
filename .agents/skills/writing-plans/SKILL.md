@@ -65,6 +65,8 @@ This structure informs the task decomposition. Each task should produce self-con
 ````markdown
 ### Task N: [Component Name]
 
+**Skills:** `skill-name` (list any skills from the available skill set that apply to this task; omit line if none apply)
+
 **Files:**
 - Create: `exact/path/to/file.py`
 - Modify: `exact/path/to/existing.py:123-145`
