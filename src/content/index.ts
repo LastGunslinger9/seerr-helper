@@ -160,6 +160,9 @@ function widgetCSS(): string {
       letter-spacing: 0.06em;
       opacity: 0.7;
     }
+    .seerr-col-label .seerr-icon {
+      font-size: 2em;
+    }
     .seerr-col-sub {
       font-size: 11px;
       color: #bbccdd;
