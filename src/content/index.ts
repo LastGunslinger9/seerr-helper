@@ -156,6 +156,7 @@ function widgetCSS(): string {
     }
     .seerr-col-label {
       display: flex;
+      justify-content: center;
       color: var(--seerr-text);
       font-size: 42px;
       line-height: 1;
