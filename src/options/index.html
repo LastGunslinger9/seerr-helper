@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>seerr-helper — Settings</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #1a1a2e; color: #e0e0e0; max-width: 480px; margin: 40px auto; padding: 0 20px; }
+    h1 { font-size: 1.2rem; margin-bottom: 24px; }
+    label { display: block; font-size: 0.85rem; color: #89a; margin-bottom: 4px; }
+    input { width: 100%; box-sizing: border-box; padding: 8px 10px; background: #283038; border: 1px solid #445; border-radius: 4px; color: #fff; font-size: 0.95rem; margin-bottom: 16px; }
+    .btn-row { display: flex; gap: 10px; margin-top: 8px; }
+    button { padding: 8px 18px; border: none; border-radius: 4px; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+    #btn-save { background: #2c7be5; color: #fff; }
+    #btn-test { background: #445566; color: #fff; }
+    #status { margin-top: 14px; font-size: 0.85rem; min-height: 20px; }
+    #status.ok  { color: #28a745; }
+    #status.err { color: #c0392b; }
+  </style>
+</head>
+<body>
+  <h1>seerr-helper Settings</h1>
+  <label for="base-url">Seerr Base URL</label>
+  <input id="base-url" type="url" placeholder="http://192.168.1.10:5055" />
+  <label for="api-key">API Key</label>
+  <input id="api-key" type="password" placeholder="Your Overseerr/Jellyseerr API key" />
+  <div class="btn-row">
+    <button id="btn-save">Save</button>
+    <button id="btn-test">Test Connection</button>
+  </div>
+  <div id="status"></div>
+  <script type="module" src="./index.ts"></script>
+</body>
+</html>
