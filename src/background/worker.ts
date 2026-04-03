@@ -126,4 +126,8 @@ if (typeof chrome !== 'undefined' && chrome.runtime?.onMessage) {
     handleMessage(message).then(sendResponse)
     return true // keep channel open for async response
   })
+
+  chrome.action.onClicked.addListener(() => {
+    chrome.runtime.openOptionsPage()
+  })
 }

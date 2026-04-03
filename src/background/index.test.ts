@@ -1,4 +1,4 @@
-import { handleMessage } from './index'
+import { handleMessage } from './worker'
 
 const mockStorage = { seerr_base_url: 'http://localhost:5055', seerr_api_key: 'test-key' }
 

@@ -1,0 +1,1271 @@
+(function () {
+  const PROPS = [
+    'display', 'flexDirection', 'flexWrap', 'alignItems', 'justifyContent',
+    'gridTemplateColumns', 'gap', 'rowGap', 'columnGap',
+    'width', 'height', 'minWidth', 'maxWidth', 'minHeight', 'maxHeight',
+    'padding', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
+    'margin', 'marginTop', 'marginRight', 'marginBottom', 'marginLeft',
+    'background', 'backgroundColor', 'color', 'opacity',
+    'border', 'borderTop', 'borderRight', 'borderBottom', 'borderLeft', 'borderRadius',
+    'fontFamily', 'fontSize', 'fontWeight', 'lineHeight', 'letterSpacing',
+    'textTransform', 'textAlign', 'whiteSpace',
+    'position', 'top', 'right', 'bottom', 'left', 'zIndex',
+    'overflow', 'cursor', 'transition', 'visibility', 'boxSizing',
+  ]
+
+  const SKIP = new Set(['', 'none', 'normal', 'auto', 'visible', 'static', 'inline', 'start'])
+
+  function styleString(el) {
+    const cs = window.getComputedStyle(el)
+    return PROPS
+      .map(p => [p, cs.getPropertyValue(p.replace(/([A-Z])/g, '-$1').toLowerCase()).trim()])
+      .filter(([, v]) => v && !SKIP.has(v) && v !== '0px' && v !== 'rgba(0, 0, 0, 0)' && !v.startsWith('matrix'))
+      .map(([p, v]) => `  ${p}: ${v}`)
+      .join('\n')
+  }
+
+  function selector(el) {
+    const id = el.id ? `#${el.id}` : ''
+    const cls = typeof el.className === 'string' && el.className.trim()
+      ? '.' + el.className.trim().split(/\s+/).join('.')
+      : ''
+    return `${el.tagName.toLowerCase()}${id}${cls}`
+  }
+
+  function walk(el, depth) {
+    const indent = '  '.repeat(depth)
+    const styles = styleString(el)
+    const text = el.childNodes.length === 1 && el.firstChild.nodeType === 3
+      ? ` [text: "${el.firstChild.textContent.trim().slice(0, 40)}"]` : ''
+    console.log(`${indent}${selector(el)}${text}`)
+    if (styles) console.log(styles.split('\n').map(l => indent + l).join('\n'))
+    for (const child of el.children) walk(child, depth + 1)
+  }
+
+  const panel = document.querySelector('ul.js-actions-panel')
+  if (!panel) return console.warn('Panel not found')
+  walk(panel, 0)
+})()
+VM60440:40 ul.js-actions-panel
+VM60440:41   display: block
+  flexDirection: row
+  flexWrap: nowrap
+  width: 230px
+  height: 408.717px
+  background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+  color: rgb(153, 170, 187)
+  opacity: 1
+  border: 0px none rgb(153, 170, 187)
+  borderTop: 0px none rgb(153, 170, 187)
+  borderRight: 0px none rgb(153, 170, 187)
+  borderBottom: 0px none rgb(153, 170, 187)
+  borderLeft: 0px none rgb(153, 170, 187)
+  fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+  fontSize: 13px
+  fontWeight: 400
+  lineHeight: 13px
+  transition: all
+  boxSizing: content-box
+VM60440:40   li.actions-row1
+VM60440:41     display: grid
+    flexDirection: row
+    flexWrap: nowrap
+    gridTemplateColumns: 90px 50px 90px
+    width: 230px
+    height: 81.7076px
+    padding: 10px 0px
+    paddingTop: 10px
+    paddingBottom: 10px
+    background: rgb(68, 85, 102) none repeat scroll 0% 0% / auto padding-box border-box
+    backgroundColor: rgb(68, 85, 102)
+    color: rgb(187, 204, 221)
+    opacity: 1
+    borderTop: 0px none rgb(187, 204, 221)
+    borderRight: 0px none rgb(187, 204, 221)
+    borderBottom: 0.714286px solid rgb(44, 52, 64)
+    borderLeft: 0px none rgb(187, 204, 221)
+    borderRadius: 3px 3px 0px 0px
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 18px
+    textAlign: center
+    overflow: hidden
+    transition: all
+    boxSizing: border-box
+VM60440:40     span.action-large.-watch
+VM60440:41       display: block
+      flexDirection: row
+      flexWrap: nowrap
+      width: 90px
+      height: 60.9933px
+      background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+      color: rgb(187, 204, 221)
+      opacity: 1
+      border: 0px none rgb(187, 204, 221)
+      borderTop: 0px none rgb(187, 204, 221)
+      borderRight: 0px none rgb(187, 204, 221)
+      borderBottom: 0px none rgb(187, 204, 221)
+      borderLeft: 0px none rgb(187, 204, 221)
+      fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+      fontSize: 13px
+      fontWeight: 400
+      lineHeight: 18px
+      textAlign: center
+      position: relative
+      transition: all
+      boxSizing: content-box
+VM60440:40       span.watch-link-target.react-component
+VM60440:41         display: block
+        flexDirection: row
+        flexWrap: nowrap
+        width: 90px
+        height: 60.9933px
+        background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+        color: rgb(187, 204, 221)
+        opacity: 1
+        border: 0px none rgb(187, 204, 221)
+        borderTop: 0px none rgb(187, 204, 221)
+        borderRight: 0px none rgb(187, 204, 221)
+        borderBottom: 0px none rgb(187, 204, 221)
+        borderLeft: 0px none rgb(187, 204, 221)
+        fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+        fontSize: 13px
+        fontWeight: 400
+        lineHeight: 18px
+        textAlign: center
+        transition: all
+        boxSizing: content-box
+VM60440:40         span.watch-link
+VM60440:41           display: block
+          flexDirection: row
+          flexWrap: nowrap
+          width: 90px
+          height: 60.9933px
+          background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+          color: rgb(187, 204, 221)
+          opacity: 1
+          border: 0px none rgb(187, 204, 221)
+          borderTop: 0px none rgb(187, 204, 221)
+          borderRight: 0px none rgb(187, 204, 221)
+          borderBottom: 0px none rgb(187, 204, 221)
+          borderLeft: 0px none rgb(187, 204, 221)
+          fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+          fontSize: 13px
+          fontWeight: 400
+          lineHeight: 18px
+          textAlign: center
+          transition: all
+          boxSizing: content-box
+VM60440:40           span.action.-watch
+VM60440:41             display: block
+            flexDirection: row
+            flexWrap: nowrap
+            width: 90px
+            height: 60.9933px
+            minWidth: 50px
+            background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+            color: rgb(187, 204, 221)
+            opacity: 1
+            border: 0px none rgb(187, 204, 221)
+            borderTop: 0px none rgb(187, 204, 221)
+            borderRight: 0px none rgb(187, 204, 221)
+            borderBottom: 0px none rgb(187, 204, 221)
+            borderLeft: 0px none rgb(187, 204, 221)
+            fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+            fontSize: 13px
+            fontWeight: 400
+            lineHeight: 18px
+            textTransform: capitalize
+            textAlign: center
+            cursor: pointer
+            transition: all
+            boxSizing: content-box
+VM60440:40             span.icon
+VM60440:41               display: block
+              flexDirection: row
+              flexWrap: nowrap
+              background: rgba(0, 0, 0, 0) url("https://s.ltrbxd.com/static/img/sprite-DzUy8pgb.svg") no-repeat scroll 0% 0% / auto padding-box border-box
+              color: rgb(187, 204, 221)
+              opacity: 1
+              border: 0px none rgb(187, 204, 221)
+              borderTop: 0px none rgb(187, 204, 221)
+              borderRight: 0px none rgb(187, 204, 221)
+              borderBottom: 0px none rgb(187, 204, 221)
+              borderLeft: 0px none rgb(187, 204, 221)
+              fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+              fontSize: 13px
+              fontWeight: 400
+              lineHeight: 18px
+              textTransform: capitalize
+              textAlign: center
+              position: absolute
+              right: 90px
+              bottom: 60.9933px
+              cursor: pointer
+              transition: all
+              boxSizing: content-box
+VM60440:40     span.action-large.-like
+VM60440:41       display: block
+      flexDirection: row
+      flexWrap: nowrap
+      width: 50px
+      height: 60.9933px
+      background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+      color: rgb(187, 204, 221)
+      opacity: 1
+      border: 0px none rgb(187, 204, 221)
+      borderTop: 0px none rgb(187, 204, 221)
+      borderRight: 0px none rgb(187, 204, 221)
+      borderBottom: 0px none rgb(187, 204, 221)
+      borderLeft: 0px none rgb(187, 204, 221)
+      fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+      fontSize: 13px
+      fontWeight: 400
+      lineHeight: 18px
+      textAlign: center
+      transition: all
+      boxSizing: content-box
+VM60440:40       span.like-link-target.react-component
+VM60440:41         flexDirection: row
+        flexWrap: nowrap
+        background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+        color: rgb(187, 204, 221)
+        opacity: 1
+        border: 0px none rgb(187, 204, 221)
+        borderTop: 0px none rgb(187, 204, 221)
+        borderRight: 0px none rgb(187, 204, 221)
+        borderBottom: 0px none rgb(187, 204, 221)
+        borderLeft: 0px none rgb(187, 204, 221)
+        fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+        fontSize: 13px
+        fontWeight: 400
+        lineHeight: 18px
+        textAlign: center
+        transition: all
+        boxSizing: content-box
+VM60440:40         span.like-link
+VM60440:41           display: block
+          flexDirection: row
+          flexWrap: nowrap
+          width: 50px
+          height: 60.9933px
+          background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+          color: rgb(187, 204, 221)
+          opacity: 1
+          border: 0px none rgb(187, 204, 221)
+          borderTop: 0px none rgb(187, 204, 221)
+          borderRight: 0px none rgb(187, 204, 221)
+          borderBottom: 0px none rgb(187, 204, 221)
+          borderLeft: 0px none rgb(187, 204, 221)
+          fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+          fontSize: 13px
+          fontWeight: 400
+          lineHeight: 18px
+          textAlign: center
+          position: relative
+          transition: all
+          boxSizing: content-box
+VM60440:40           span.action.-like [text: "Like"]
+VM60440:41             display: block
+            flexDirection: row
+            flexWrap: nowrap
+            width: 50px
+            height: 60.9933px
+            minWidth: 50px
+            background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+            color: rgb(187, 204, 221)
+            opacity: 1
+            border: 0px none rgb(187, 204, 221)
+            borderTop: 0px none rgb(187, 204, 221)
+            borderRight: 0px none rgb(187, 204, 221)
+            borderBottom: 0px none rgb(187, 204, 221)
+            borderLeft: 0px none rgb(187, 204, 221)
+            fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+            fontSize: 13px
+            fontWeight: 400
+            lineHeight: 18px
+            textAlign: center
+            cursor: pointer
+            transition: all
+            boxSizing: content-box
+VM60440:40     div.react-component
+VM60440:41       display: block
+      flexDirection: row
+      flexWrap: nowrap
+      width: 90px
+      height: 60.9933px
+      background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+      color: rgb(187, 204, 221)
+      opacity: 1
+      border: 0px none rgb(187, 204, 221)
+      borderTop: 0px none rgb(187, 204, 221)
+      borderRight: 0px none rgb(187, 204, 221)
+      borderBottom: 0px none rgb(187, 204, 221)
+      borderLeft: 0px none rgb(187, 204, 221)
+      fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+      fontSize: 13px
+      fontWeight: 400
+      lineHeight: 18px
+      textAlign: center
+      transition: all
+      boxSizing: content-box
+VM60440:40       div
+VM60440:41         display: block
+        flexDirection: row
+        flexWrap: nowrap
+        width: 90px
+        height: 60.9933px
+        background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+        color: rgb(187, 204, 221)
+        opacity: 1
+        border: 0px none rgb(187, 204, 221)
+        borderTop: 0px none rgb(187, 204, 221)
+        borderRight: 0px none rgb(187, 204, 221)
+        borderBottom: 0px none rgb(187, 204, 221)
+        borderLeft: 0px none rgb(187, 204, 221)
+        fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+        fontSize: 13px
+        fontWeight: 400
+        lineHeight: 18px
+        textAlign: center
+        transition: all
+        boxSizing: content-box
+VM60440:40         span.action-large.-watchlist
+VM60440:41           flexDirection: row
+          flexWrap: nowrap
+          background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+          color: rgb(187, 204, 221)
+          opacity: 1
+          border: 0px none rgb(187, 204, 221)
+          borderTop: 0px none rgb(187, 204, 221)
+          borderRight: 0px none rgb(187, 204, 221)
+          borderBottom: 0px none rgb(187, 204, 221)
+          borderLeft: 0px none rgb(187, 204, 221)
+          fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+          fontSize: 13px
+          fontWeight: 400
+          lineHeight: 18px
+          textAlign: center
+          transition: all
+          boxSizing: content-box
+VM60440:40           a.action.-watchlist.add-to-watchlist
+VM60440:41             display: block
+            flexDirection: row
+            flexWrap: nowrap
+            width: 90px
+            height: 60.9933px
+            minWidth: 50px
+            background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+            color: rgb(187, 204, 221)
+            opacity: 1
+            border: 0px none rgb(187, 204, 221)
+            borderTop: 0px none rgb(187, 204, 221)
+            borderRight: 0px none rgb(187, 204, 221)
+            borderBottom: 0px none rgb(187, 204, 221)
+            borderLeft: 0px none rgb(187, 204, 221)
+            fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+            fontSize: 13px
+            fontWeight: 400
+            lineHeight: 18px
+            textAlign: center
+            cursor: pointer
+            transition: all
+            boxSizing: content-box
+VM60440:40             span._hidetext [text: "Add this film to your"]
+VM60440:41               display: block
+              flexDirection: row
+              flexWrap: nowrap
+              background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+              opacity: 1
+              border: 0px none rgba(0, 0, 0, 0)
+              borderTop: 0px none rgba(0, 0, 0, 0)
+              borderRight: 0px none rgba(0, 0, 0, 0)
+              borderBottom: 0px none rgba(0, 0, 0, 0)
+              borderLeft: 0px none rgba(0, 0, 0, 0)
+              fontFamily: a
+              fontWeight: 400
+              textAlign: center
+              position: absolute
+              top: 119.989px
+              right: 73.683px
+              bottom: 3417.42px
+              left: 876.317px
+              cursor: pointer
+              transition: all
+              boxSizing: content-box
+VM60440:40   li.-row-clear.panel-rate.js-panel-rate
+VM60440:41     display: list-item
+    flexDirection: row
+    flexWrap: nowrap
+    width: 230px
+    height: 74.7433px
+    padding: 10px 0px
+    paddingTop: 10px
+    paddingBottom: 10px
+    background: rgb(68, 85, 102) none repeat scroll 0% 0% / auto padding-box border-box
+    backgroundColor: rgb(68, 85, 102)
+    color: rgb(187, 204, 221)
+    opacity: 1
+    borderTop: 0px none rgb(187, 204, 221)
+    borderRight: 0px none rgb(187, 204, 221)
+    borderBottom: 0.714286px solid rgb(44, 52, 64)
+    borderLeft: 0px none rgb(187, 204, 221)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 18px
+    textAlign: center
+    position: relative
+    transition: all
+    boxSizing: border-box
+VM60440:40     span.rateit-label.js-rateit-label [text: "Rate"]
+VM60440:41       flexDirection: row
+      flexWrap: nowrap
+      background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+      color: rgb(187, 204, 221)
+      opacity: 1
+      border: 0px none rgb(187, 204, 221)
+      borderTop: 0px none rgb(187, 204, 221)
+      borderRight: 0px none rgb(187, 204, 221)
+      borderBottom: 0px none rgb(187, 204, 221)
+      borderLeft: 0px none rgb(187, 204, 221)
+      fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+      fontSize: 12px
+      fontWeight: 400
+      lineHeight: 16.6154px
+      textAlign: center
+      transition: all
+      boxSizing: content-box
+VM60440:40     input#frm-sidebar-rating.panel-rateit-field
+VM60440:41       flexDirection: row
+      flexWrap: nowrap
+      height: 10px
+      margin: 2px
+      marginTop: 2px
+      marginRight: 2px
+      marginBottom: 2px
+      marginLeft: 2px
+      background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+      color: rgb(44, 54, 65)
+      opacity: 1
+      border: 0px none rgb(44, 54, 65)
+      borderTop: 0px none rgb(44, 54, 65)
+      borderRight: 0px none rgb(44, 54, 65)
+      borderBottom: 0px none rgb(44, 54, 65)
+      borderLeft: 0px none rgb(44, 54, 65)
+      fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+      fontSize: 10px
+      fontWeight: 400
+      position: absolute
+      cursor: default
+      transition: all
+      boxSizing: content-box
+VM60440:40     div.rateit.panel-rateit.instant-rating
+VM60440:41       display: block
+      flexDirection: row
+      flexWrap: nowrap
+      width: 230px
+      height: 31.9978px
+      margin: 4px 0px 0px
+      marginTop: 4px
+      background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+      color: rgb(187, 204, 221)
+      opacity: 1
+      border: 0px none rgb(187, 204, 221)
+      borderTop: 0px none rgb(187, 204, 221)
+      borderRight: 0px none rgb(187, 204, 221)
+      borderBottom: 0px none rgb(187, 204, 221)
+      borderLeft: 0px none rgb(187, 204, 221)
+      fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+      fontSize: 13px
+      fontWeight: 400
+      lineHeight: 18px
+      textAlign: center
+      position: relative
+      transition: all
+      boxSizing: content-box
+VM60440:40       button#rateit-reset-2.rateit-reset
+VM60440:41         flexDirection: row
+        flexWrap: nowrap
+        width: 20px
+        height: 26px
+        background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+        color: rgb(187, 204, 221)
+        opacity: 1
+        border: 0px none rgb(187, 204, 221)
+        borderTop: 0px none rgb(187, 204, 221)
+        borderRight: 0px none rgb(187, 204, 221)
+        borderBottom: 0px none rgb(187, 204, 221)
+        borderLeft: 0px none rgb(187, 204, 221)
+        fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+        fontSize: 13px
+        fontWeight: 400
+        lineHeight: 18px
+        textAlign: center
+        position: absolute
+        right: 100%
+        overflow: hidden
+        cursor: pointer
+        transition: all
+        boxSizing: border-box
+VM60440:40       div#rateit-range-2.rateit-range
+VM60440:41         display: block
+        flexDirection: row
+        flexWrap: nowrap
+        width: 180px
+        height: 31.9978px
+        margin: 0px 25px
+        marginRight: 25px
+        marginLeft: 25px
+        background: rgba(0, 0, 0, 0) url("https://s.ltrbxd.com/static/img/sprite-DzUy8pgb.svg") repeat scroll 1px -890px / auto padding-box border-box
+        color: rgb(187, 204, 221)
+        opacity: 1
+        border: 0px none rgb(187, 204, 221)
+        borderTop: 0px none rgb(187, 204, 221)
+        borderRight: 0px none rgb(187, 204, 221)
+        borderBottom: 0px none rgb(187, 204, 221)
+        borderLeft: 0px none rgb(187, 204, 221)
+        fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+        fontSize: 13px
+        fontWeight: 400
+        lineHeight: 18px
+        textAlign: center
+        position: relative
+        transition: all
+        boxSizing: content-box
+VM60440:40         div.rateit-selected
+VM60440:41           display: block
+          flexDirection: row
+          flexWrap: nowrap
+          height: 31.9978px
+          background: rgba(0, 0, 0, 0) url("https://s.ltrbxd.com/static/img/sprite-DzUy8pgb.svg") repeat scroll 1px -925px / auto padding-box border-box
+          color: rgb(187, 204, 221)
+          opacity: 1
+          border: 0px none rgb(187, 204, 221)
+          borderTop: 0px none rgb(187, 204, 221)
+          borderRight: 0px none rgb(187, 204, 221)
+          borderBottom: 0px none rgb(187, 204, 221)
+          borderLeft: 0px none rgb(187, 204, 221)
+          fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+          fontSize: 13px
+          fontWeight: 400
+          lineHeight: 18px
+          textAlign: center
+          transition: all
+          boxSizing: content-box
+VM60440:40         div.rateit-hover
+VM60440:41           display: block
+          flexDirection: row
+          flexWrap: nowrap
+          height: 31.9978px
+          background: rgba(0, 0, 0, 0) url("https://s.ltrbxd.com/static/img/sprite-DzUy8pgb.svg") repeat scroll 1px -960px / auto padding-box border-box
+          color: rgb(187, 204, 221)
+          opacity: 1
+          border: 0px none rgb(187, 204, 221)
+          borderTop: 0px none rgb(187, 204, 221)
+          borderRight: 0px none rgb(187, 204, 221)
+          borderBottom: 0px none rgb(187, 204, 221)
+          borderLeft: 0px none rgb(187, 204, 221)
+          fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+          fontSize: 13px
+          fontWeight: 400
+          lineHeight: 18px
+          textAlign: center
+          position: absolute
+          top: 31.9978px
+          right: 180px
+          bottom: -31.9978px
+          transition: all
+          boxSizing: content-box
+VM60440:40     script [text: "ASAP(function() { PubSub.publish('letter"]
+VM60440:41       flexDirection: row
+      flexWrap: nowrap
+      background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+      color: rgb(187, 204, 221)
+      opacity: 1
+      border: 0px none rgb(187, 204, 221)
+      borderTop: 0px none rgb(187, 204, 221)
+      borderRight: 0px none rgb(187, 204, 221)
+      borderBottom: 0px none rgb(187, 204, 221)
+      borderLeft: 0px none rgb(187, 204, 221)
+      fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+      fontSize: 13px
+      fontWeight: 400
+      lineHeight: 18px
+      textAlign: center
+      transition: all
+      boxSizing: content-box
+VM60440:40   li.react-component.row-fill
+VM60440:41     display: list-item
+    flexDirection: row
+    flexWrap: nowrap
+    width: 230px
+    height: 38.7165px
+    background: rgb(68, 85, 102) none repeat scroll 0% 0% / auto padding-box border-box
+    backgroundColor: rgb(68, 85, 102)
+    color: rgb(187, 204, 221)
+    opacity: 1
+    borderTop: 0px none rgb(187, 204, 221)
+    borderRight: 0px none rgb(187, 204, 221)
+    borderBottom: 0.714286px solid rgb(44, 52, 64)
+    borderLeft: 0px none rgb(187, 204, 221)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 18px
+    textAlign: center
+    transition: all
+    boxSizing: border-box
+VM60440:40     div.menuitem.-trigger.-has-no-icon
+VM60440:41       display: block
+      flexDirection: row
+      flexWrap: nowrap
+      width: 230px
+      height: 38.0022px
+      background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+      color: rgb(187, 204, 221)
+      opacity: 1
+      border: 0px none rgb(187, 204, 221)
+      borderTop: 0px none rgb(187, 204, 221)
+      borderRight: 0px none rgb(187, 204, 221)
+      borderBottom: 0px none rgb(187, 204, 221)
+      borderLeft: 0px none rgb(187, 204, 221)
+      fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+      fontSize: 13px
+      fontWeight: 400
+      lineHeight: 18px
+      textAlign: center
+      transition: all
+      boxSizing: content-box
+VM60440:40       a
+VM60440:41         display: block
+        flexDirection: row
+        flexWrap: nowrap
+        width: 230px
+        height: 18.0022px
+        padding: 10px 0px
+        paddingTop: 10px
+        paddingBottom: 10px
+        background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+        color: rgb(187, 204, 221)
+        opacity: 1
+        border: 0px none rgb(187, 204, 221)
+        borderTop: 0px none rgb(187, 204, 221)
+        borderRight: 0px none rgb(187, 204, 221)
+        borderBottom: 0px none rgb(187, 204, 221)
+        borderLeft: 0px none rgb(187, 204, 221)
+        fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+        fontSize: 13px
+        fontWeight: 400
+        lineHeight: 18px
+        textAlign: center
+        cursor: pointer
+        transition: all
+        boxSizing: content-box
+VM60440:40         div._skeleton_12rab_7
+VM60440:41           display: inline-block
+          flexDirection: row
+          flexWrap: nowrap
+          width: 114.565px
+          height: 18.0022px
+          background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+          color: rgb(187, 204, 221)
+          opacity: 1
+          border: 0px none rgb(187, 204, 221)
+          borderTop: 0px none rgb(187, 204, 221)
+          borderRight: 0px none rgb(187, 204, 221)
+          borderBottom: 0px none rgb(187, 204, 221)
+          borderLeft: 0px none rgb(187, 204, 221)
+          fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+          fontSize: 13px
+          fontWeight: 400
+          lineHeight: 18px
+          textAlign: center
+          cursor: pointer
+          transition: opacity
+          boxSizing: content-box
+VM60440:40   li.react-component.row-fill
+VM60440:41     display: list-item
+    flexDirection: row
+    flexWrap: nowrap
+    width: 230px
+    height: 38.7165px
+    background: rgb(68, 85, 102) none repeat scroll 0% 0% / auto padding-box border-box
+    backgroundColor: rgb(68, 85, 102)
+    color: rgb(187, 204, 221)
+    opacity: 1
+    borderTop: 0px none rgb(187, 204, 221)
+    borderRight: 0px none rgb(187, 204, 221)
+    borderBottom: 0.714286px solid rgb(44, 52, 64)
+    borderLeft: 0px none rgb(187, 204, 221)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 18px
+    textAlign: center
+    transition: all
+    boxSizing: border-box
+VM60440:40     div.menuitem.-trigger.-has-no-icon
+VM60440:41       display: block
+      flexDirection: row
+      flexWrap: nowrap
+      width: 230px
+      height: 38.0022px
+      background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+      color: rgb(187, 204, 221)
+      opacity: 1
+      border: 0px none rgb(187, 204, 221)
+      borderTop: 0px none rgb(187, 204, 221)
+      borderRight: 0px none rgb(187, 204, 221)
+      borderBottom: 0px none rgb(187, 204, 221)
+      borderLeft: 0px none rgb(187, 204, 221)
+      fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+      fontSize: 13px
+      fontWeight: 400
+      lineHeight: 18px
+      textAlign: center
+      transition: all
+      boxSizing: content-box
+VM60440:40       button
+VM60440:41         display: block
+        flexDirection: row
+        flexWrap: nowrap
+        width: 230px
+        height: 38.0022px
+        padding: 10px 0px
+        paddingTop: 10px
+        paddingBottom: 10px
+        background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+        color: rgb(187, 204, 221)
+        opacity: 1
+        border: 0px none rgb(187, 204, 221)
+        borderTop: 0px none rgb(187, 204, 221)
+        borderRight: 0px none rgb(187, 204, 221)
+        borderBottom: 0px none rgb(187, 204, 221)
+        borderLeft: 0px none rgb(187, 204, 221)
+        fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+        fontSize: 13px
+        fontWeight: 400
+        lineHeight: 18px
+        textAlign: center
+        cursor: pointer
+        transition: all
+        boxSizing: border-box
+VM60440:40         div._skeleton_12rab_7 [text: "Review or log…"]
+VM60440:41           display: inline-block
+          flexDirection: row
+          flexWrap: nowrap
+          width: 94.4531px
+          height: 18.0022px
+          background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+          color: rgb(187, 204, 221)
+          opacity: 1
+          border: 0px none rgb(187, 204, 221)
+          borderTop: 0px none rgb(187, 204, 221)
+          borderRight: 0px none rgb(187, 204, 221)
+          borderBottom: 0px none rgb(187, 204, 221)
+          borderLeft: 0px none rgb(187, 204, 221)
+          fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+          fontSize: 13px
+          fontWeight: 400
+          lineHeight: 18px
+          textAlign: center
+          cursor: pointer
+          transition: opacity
+          boxSizing: content-box
+VM60440:40   li
+VM60440:41     display: list-item
+    flexDirection: row
+    flexWrap: nowrap
+    width: 230px
+    height: 38.7165px
+    padding: 10px 0px
+    paddingTop: 10px
+    paddingBottom: 10px
+    background: rgb(68, 85, 102) none repeat scroll 0% 0% / auto padding-box border-box
+    backgroundColor: rgb(68, 85, 102)
+    color: rgb(187, 204, 221)
+    opacity: 1
+    borderTop: 0px none rgb(187, 204, 221)
+    borderRight: 0px none rgb(187, 204, 221)
+    borderBottom: 0.714286px solid rgb(44, 52, 64)
+    borderLeft: 0px none rgb(187, 204, 221)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 18px
+    textAlign: center
+    transition: all
+    boxSizing: border-box
+VM60440:40     a.new-list.menu-item-add-to-list [text: "Add to lists…"]
+VM60440:41       flexDirection: row
+      flexWrap: nowrap
+      background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+      color: rgb(187, 204, 221)
+      opacity: 1
+      border: 0px none rgb(187, 204, 221)
+      borderTop: 0px none rgb(187, 204, 221)
+      borderRight: 0px none rgb(187, 204, 221)
+      borderBottom: 0px none rgb(187, 204, 221)
+      borderLeft: 0px none rgb(187, 204, 221)
+      fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+      fontSize: 13px
+      fontWeight: 400
+      lineHeight: 18px
+      textAlign: center
+      cursor: pointer
+      transition: all
+      boxSizing: content-box
+VM60440:40   script
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   link
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   link
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   link
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   link
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   link
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   link
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   link
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   link
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   link
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   link
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   link
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   link
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   link
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   link
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   link
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   script [text: "import.meta.url;import("_").catch(()=>1)"]
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   script [text: "!function(){if(window.__vite_is_modern_b"]
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   script [text: "!function(){var e=document,t=e.createEle"]
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   script#vite-legacy-polyfill
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   script#vite-legacy-entry [text: "System.import(document.getElementById('v"]
+VM60440:41     flexDirection: row
+    flexWrap: nowrap
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+    color: rgb(153, 170, 187)
+    opacity: 1
+    border: 0px none rgb(153, 170, 187)
+    borderTop: 0px none rgb(153, 170, 187)
+    borderRight: 0px none rgb(153, 170, 187)
+    borderBottom: 0px none rgb(153, 170, 187)
+    borderLeft: 0px none rgb(153, 170, 187)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 13px
+    transition: all
+    boxSizing: content-box
+VM60440:40   li#seerr-releases-panel
+VM60440:41     display: list-item
+    flexDirection: row
+    flexWrap: nowrap
+    width: 230px
+    height: 58.7165px
+    padding: 10px 0px
+    paddingTop: 10px
+    paddingBottom: 10px
+    background: rgb(68, 85, 102) none repeat scroll 0% 0% / auto padding-box border-box
+    backgroundColor: rgb(68, 85, 102)
+    color: rgb(187, 204, 221)
+    opacity: 1
+    borderTop: 0px none rgb(187, 204, 221)
+    borderRight: 0px none rgb(187, 204, 221)
+    borderBottom: 0.714286px solid rgb(44, 52, 64)
+    borderLeft: 0px none rgb(187, 204, 221)
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 18px
+    textAlign: center
+    transition: all
+    boxSizing: border-box
+VM60440:40     div
+VM60440:41       display: grid
+      flexDirection: row
+      flexWrap: nowrap
+      gridTemplateColumns: 230px
+      width: 230px
+      height: 38.0022px
+      background: rgb(68, 85, 102) none repeat scroll 0% 0% / auto padding-box border-box
+      backgroundColor: rgb(68, 85, 102)
+      color: rgb(187, 204, 221)
+      opacity: 1
+      border: 0px none rgb(187, 204, 221)
+      borderTop: 0px none rgb(187, 204, 221)
+      borderRight: 0px none rgb(187, 204, 221)
+      borderBottom: 0px none rgb(187, 204, 221)
+      borderLeft: 0px none rgb(187, 204, 221)
+      fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+      fontSize: 13px
+      fontWeight: 400
+      lineHeight: 18px
+      textAlign: center
+      transition: all
+      boxSizing: content-box
+VM60440:40   li#seerr-helper-root
+VM60440:41     display: list-item
+    flexDirection: row
+    flexWrap: nowrap
+    width: 230px
+    height: 77.3996px
+    padding: 10px 0px
+    paddingTop: 10px
+    paddingBottom: 10px
+    background: rgb(68, 85, 102) none repeat scroll 0% 0% / auto padding-box border-box
+    backgroundColor: rgb(68, 85, 102)
+    color: rgb(187, 204, 221)
+    opacity: 1
+    border: 0px none rgb(187, 204, 221)
+    borderTop: 0px none rgb(187, 204, 221)
+    borderRight: 0px none rgb(187, 204, 221)
+    borderBottom: 0px none rgb(187, 204, 221)
+    borderLeft: 0px none rgb(187, 204, 221)
+    borderRadius: 0px 0px 3px 3px
+    fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 18px
+    textAlign: center
+    transition: all
+    boxSizing: border-box
+VM60440:40     div
+VM60440:41       display: block
+      flexDirection: row
+      flexWrap: nowrap
+      width: 230px
+      height: 57.3996px
+      background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+      color: rgb(187, 204, 221)
+      opacity: 1
+      border: 0px none rgb(187, 204, 221)
+      borderTop: 0px none rgb(187, 204, 221)
+      borderRight: 0px none rgb(187, 204, 221)
+      borderBottom: 0px none rgb(187, 204, 221)
+      borderLeft: 0px none rgb(187, 204, 221)
+      fontFamily: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif, ColorEmoji
+      fontSize: 13px
+      fontWeight: 400
+      lineHeight: 18px
+      textAlign: center
+      transition: all
+      boxSizing: content-box
+undefined

@@ -1,9 +1,9 @@
 {
   "name": "seerr-helper",
   "version": "1.0.0",
-  "description": "Shows Overseerr/Jellyseerr request status on Letterboxd film pages.",
+  "description": "Shows Seerr request status on Letterboxd film pages.",
   "scripts": {
-    "dev": "vite build --watch",
+    "dev": "vite",
     "build": "vite build",
     "test": "jest"
   },
@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/Alsharad/seerr-helper#readme",
   "devDependencies": {
+    "@crxjs/vite-plugin": "^2.4.0",
     "@types/chrome": "^0.1.39",
     "@types/jest": "^30.0.0",
     "jest": "^30.3.0",

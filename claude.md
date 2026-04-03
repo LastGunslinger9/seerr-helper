@@ -1,12 +1,12 @@
 # seerr-helper
 
-A Chrome extension that enhances Letterboxd movie pages by displaying Overseerr/Jellyseerr request status and availability, with per-quality (HD/4K) request buttons injected directly into the Letterboxd sidebar panel.
+A Chrome extension that enhances Letterboxd movie pages by displaying Seerr request status and availability, with per-quality (HD/4K) request buttons injected directly into the Letterboxd sidebar panel.
 
 ## Project Overview
 
 - **Extension type**: Chrome Extension (Manifest V3)
 - **Target site**: `letterboxd.com/film/*`
-- **Integration**: Overseerr / Jellyseerr REST API (OpenAPI spec in `external-references/seerr-api.yml`)
+- **Integration**: Seerr REST API (OpenAPI spec in `external-references/seerr-api.yml`)
 - **Language**: TypeScript
 - **Build tool**: Vite
 - **Tests**: Jest + ts-jest
@@ -56,10 +56,15 @@ seerr-helper/
 │       ├── types.ts          # Shared types: UiState, media/request shapes, messages
 │       └── resolveUiState.ts # Pure fn: (mediaStatus, requests[]) → UiState
 ├── external-references/
-│   ├── seerr-api.yml              # Overseerr OpenAPI spec
+│   ├── seerr-api.yml              # Seerr OpenAPI spec
 │   └── status-codes-reference.md  # Canonical badge colors
 └── vite.config.ts
 ```
+
+## Terminology
+
+- Use **"Seerr"** throughout — not "Overseerr", "Jellyseerr", or "Overseerr / Jellyseerr"
+- The product supports both Overseerr and Jellyseerr under the hood, but the UI and all user-facing text uses "Seerr" as the unified term
 
 ## Key Concepts
 
@@ -88,6 +93,13 @@ Content script adds its own transient states on top of `UiState`: `loading | not
 | `chrome-extension-development` | MV3 architecture, Chrome APIs, service workers, security |
 | `browser-extension-builder` | Project structure, manifest, content script patterns |
 | `chrome-extension-ui` | Shadow DOM injection, popup/content script UI, accessibility |
+
+### UI & Styling
+
+| Skill | Purpose |
+|---|---|
+| `frontend-design` | Production-grade UI components, polished styling |
+| `modern-css` | CSS nesting, custom props, logical properties, modern features |
 
 ### TypeScript & Testing
 

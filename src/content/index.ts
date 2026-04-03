@@ -1,5 +1,5 @@
 import { MessageRequest, MessageResponse, UiState, ExtendedUiState } from '../utils/types'
-import { BUTTON_ICON, RELEASE_ICON, QUALITY_ICON } from './icons'
+import { RELEASE_ICON, QUALITY_ICON } from './icons'
 
 // ── Icon font CSS ────────────────────────────────────────────────────────────
 
@@ -147,28 +147,35 @@ function widgetCSS(): string {
     .seerr-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      gap: 6px;
     }
     .seerr-col {
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 6px;
     }
     .seerr-col-label {
       display: flex;
       justify-content: center;
+    }
+    .seerr-col-label-badge {
+      display: inline-block;
+      min-width: 18px;
+      padding: 0px 3px;
+      border: 1.5px solid var(--seerr-text);
+      border-radius: 3px;
       color: var(--seerr-text);
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      line-height: 1;
-      opacity: 0.7;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: normal;
+      line-height: 18px;
+      text-align: center;
     }
     .seerr-col-sub {
-      font-size: 11px;
+      font-size: 12px;
+      line-height: 1.385;
       color: var(--seerr-text);
-      opacity: 0.55;
+      text-align: center;
       &:empty { display: none; }
     }
     .seerr-btn {
@@ -274,16 +281,8 @@ function applyButtonState(btn: HTMLButtonElement, state: ExtendedUiState): void 
     .filter(c => c.startsWith(prefix))
     .forEach(c => btn.classList.remove(c))
   btn.classList.add(`${prefix}${state}`)
-  const icon: string | undefined = (state as string) in BUTTON_ICON
-    ? BUTTON_ICON[state as Exclude<ExtendedUiState, 'loading'>]
-    : undefined
   const label = STATE_LABELS[state]
-  if (icon) {
-    const spinClass = state === 'requesting' ? ' seerr-icon--spin' : ''
-    btn.innerHTML = `<i class="${icon} seerr-icon${spinClass}" aria-hidden="true"></i> ${label}`
-  } else {
-    btn.textContent = label
-  }
+  btn.textContent = label
   btn.setAttribute('aria-label', `Seerr: ${STATE_LABELS[state]}`)
   btn.disabled = state === 'loading' || state === 'requesting' || state === 'blocklisted'
 }
@@ -346,7 +345,10 @@ async function init(): Promise<void> {
   hdCol.className = 'seerr-col'
   const hdLabel = document.createElement('span')
   hdLabel.className = 'seerr-col-label'
-  hdLabel.textContent = 'HD'
+  const hdBadge = document.createElement('span')
+  hdBadge.className = 'seerr-col-label-badge'
+  hdBadge.textContent = 'HD'
+  hdLabel.append(hdBadge)
   const hdSub = document.createElement('span')
   hdSub.className = 'seerr-col-sub'
   hdCol.append(hdLabel, hdBtn, hdSub)
@@ -355,7 +357,10 @@ async function init(): Promise<void> {
   fourKCol.className = 'seerr-col'
   const fourKLabel = document.createElement('span')
   fourKLabel.className = 'seerr-col-label'
-  fourKLabel.textContent = '4K'
+  const fourKBadge = document.createElement('span')
+  fourKBadge.className = 'seerr-col-label-badge'
+  fourKBadge.textContent = '4K'
+  fourKLabel.append(fourKBadge)
   const fourKSub = document.createElement('span')
   fourKSub.className = 'seerr-col-sub'
   fourKCol.append(fourKLabel, fourKBtn, fourKSub)
@@ -403,8 +408,8 @@ function populateReleasesPanel(
   if (theatrical || digital || physical) {
     const rows: Array<{ key: keyof typeof RELEASE_ICON; date: string | null }> = [
       { key: 'theatrical', date: theatrical },
-      { key: 'digital',    date: digital },
       { key: 'physical',   date: physical },
+      { key: 'digital',    date: digital },
     ]
     for (const { key, date } of rows) {
       if (!date) continue
@@ -485,7 +490,7 @@ function attachClickHandler(
     })
     btn.addEventListener('click', () => {
       window.open(`${baseUrl}/movie/${tmdbId}`, '_blank', 'noopener')
-    }, { once: true })
+    })
     return
   }
 

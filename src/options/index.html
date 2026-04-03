@@ -5,34 +5,277 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>seerr-helper — Settings</title>
   <style>
-    body { font-family: system-ui, sans-serif; background: #1a1a2e; color: #e0e0e0; max-width: 480px; margin: 40px auto; padding: 0 20px; }
-    h1 { font-size: 1.2rem; margin-bottom: 24px; }
-    label { display: block; font-size: 0.85rem; color: #89a; margin-bottom: 4px; }
-    input { width: 100%; box-sizing: border-box; padding: 8px 10px; background: #283038; border: 1px solid #445; border-radius: 4px; color: #fff; font-size: 0.95rem; margin-bottom: 16px; }
-    .btn-row { display: flex; gap: 10px; margin-top: 8px; }
-    button { padding: 8px 18px; border: none; border-radius: 4px; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
-    #btn-save { background: #2c7be5; color: #fff; }
-    #btn-test { background: #445566; color: #fff; }
-    #status { margin-top: 14px; font-size: 0.85rem; min-height: 20px; }
-    #status.ok  { color: #28a745; }
-    #status.err { color: #c0392b; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif;
+      background: #1e2a36;
+      color: #bbccdd;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 20px 60px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .header-icon {
+      width: 28px;
+      height: 28px;
+      background: #2c7be5;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+      flex-shrink: 0;
+    }
+
+    h1 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #bbccdd;
+      letter-spacing: 0.01em;
+    }
+
+    h1 span {
+      color: #6688aa;
+      font-weight: 400;
+    }
+
+    .card {
+      background: #2c3a4a;
+      border: 1px solid #3a4a5c;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .card-section {
+      padding: 18px 20px;
+    }
+
+    .card-section + .card-section {
+      border-top: 1px solid #3a4a5c;
+    }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #6688aa;
+      margin-bottom: 14px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      color: #8899aa;
+      margin-bottom: 6px;
+    }
+
+    .field input[type="url"],
+    .field input[type="password"],
+    .field input[type="text"] {
+      width: 100%;
+      padding: 9px 12px;
+      background: #1e2a36;
+      border: 1px solid #3a4a5c;
+      border-radius: 5px;
+      color: #bbccdd;
+      font-family: inherit;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .field input:focus {
+      border-color: #2c7be5;
+    }
+
+    .field input::placeholder {
+      color: #445566;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .toggle-row p {
+      font-size: 13px;
+      color: #bbccdd;
+    }
+
+    .toggle-row small {
+      display: block;
+      font-size: 11px;
+      color: #6688aa;
+      margin-top: 2px;
+    }
+
+    /* Toggle switch */
+    .toggle {
+      position: relative;
+      width: 36px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      background: #3a4a5c;
+      border-radius: 20px;
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+
+    .toggle-track::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 14px;
+      height: 14px;
+      background: #6688aa;
+      border-radius: 50%;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .toggle input:checked + .toggle-track {
+      background: #2c7be5;
+    }
+
+    .toggle input:checked + .toggle-track::after {
+      transform: translateX(16px);
+      background: #fff;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 9px 16px;
+      border: none;
+      border-radius: 5px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: filter 0.15s;
+    }
+
+    .btn:hover { filter: brightness(1.15); }
+    .btn:active { filter: brightness(0.9); }
+
+    .btn-primary { background: #2c7be5; color: #fff; }
+    .btn-secondary { background: #3a4a5c; color: #bbccdd; }
+
+    .btn-test {
+      width: 100%;
+      margin-top: 14px;
+      background: #3a4a5c;
+      color: #bbccdd;
+      transition: background 0.25s, color 0.25s, filter 0.15s;
+    }
+
+    .btn-test.testing  { background: #3a4a5c; color: #6688aa; }
+    .btn-test.ok       { background: #14532d; color: #22c55e; }
+    .btn-test.err      { background: #450a0a; color: #f87171; }
+
+    #status {
+      font-size: 12px;
+      min-height: 18px;
+      text-align: center;
+      padding: 8px 0 0;
+      transition: opacity 0.2s;
+    }
+
+    #status:empty { opacity: 0; }
+    #status.ok  { color: #22c55e; }
+    #status.err { color: #f87171; }
+    #status.info { color: #6688aa; }
   </style>
 </head>
 <body>
-  <h1>seerr-helper Settings</h1>
-  <label for="base-url">Seerr Base URL</label>
-  <input id="base-url" type="url" placeholder="http://192.168.1.10:5055" />
-  <label for="api-key">API Key</label>
-  <input id="api-key" type="password" placeholder="Your Overseerr/Jellyseerr API key" />
-  <label style="display: flex; align-items: center; margin-bottom: 16px;">
-    <input id="hide-sharing" type="checkbox" style="width: auto; margin-right: 8px; margin-bottom: 0;" />
-    Hide sharing panel on Letterboxd
-  </label>
-  <div class="btn-row">
-    <button id="btn-save">Save</button>
-    <button id="btn-test">Test Connection</button>
+  <div class="container">
+    <div class="header">
+      <div class="header-icon">S</div>
+      <h1>seerr-helper <span>Settings</span></h1>
+    </div>
+
+    <div class="card">
+      <div class="card-section">
+        <div class="section-label">Connection</div>
+        <div class="field">
+          <label for="base-url">Base URL</label>
+          <input id="base-url" type="url" placeholder="http://192.168.1.10:5055" />
+        </div>
+        <div class="field">
+          <label for="api-key">API Key</label>
+          <input id="api-key" type="password" placeholder="Your Seerr API key" />
+        </div>
+        <button id="btn-test" class="btn btn-test">Test Connection</button>
+      </div>
+
+      <div class="card-section">
+        <div class="section-label">Display</div>
+        <div class="toggle-row">
+          <div>
+            <p>Hide sharing panel</p>
+            <small>Remove the sharing row from the Letterboxd sidebar</small>
+          </div>
+          <label class="toggle">
+            <input id="hide-sharing" type="checkbox" />
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="btn-save" class="btn btn-primary">Save</button>
+    </div>
+
+    <div id="status"></div>
   </div>
-  <div id="status"></div>
+
   <script type="module" src="./index.ts"></script>
 </body>
 </html>
