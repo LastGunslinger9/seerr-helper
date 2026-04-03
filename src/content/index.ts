@@ -3,15 +3,28 @@ import { BUTTON_ICON, RELEASE_ICON, QUALITY_ICON } from './icons'
 
 // ── Icon font CSS ────────────────────────────────────────────────────────────
 
-function buildIconFontCSS(): string {
+// Inject @font-face into the main document once so it loads reliably.
+// @font-face inside shadow roots is unreliable in Chrome.
+function injectFontFaceToDocument(): void {
+  const id = 'seerr-remixicon-fontface'
+  if (document.getElementById(id)) return
   const woff2 = chrome.runtime.getURL('icons/remixicon/remixicon.woff2')
-  return `
+  const style = document.createElement('style')
+  style.id = id
+  style.textContent = `
     @font-face {
       font-family: 'remixicon';
       src: url('${woff2}') format('woff2');
       font-weight: normal;
       font-style: normal;
     }
+  `
+  document.head.appendChild(style)
+}
+
+// Glyph classes and utilities injected into each shadow root.
+function buildIconFontCSS(): string {
+  return `
     [class^="ri-"], [class*=" ri-"] {
       font-family: 'remixicon' !important;
       font-style: normal;
@@ -285,6 +298,9 @@ function applyButtonState(btn: HTMLButtonElement, state: ExtendedUiState): void 
 async function init(): Promise<void> {
   // Avoid double-injection
   if (document.getElementById(WIDGET_HOST_ID)) return
+
+  // Inject @font-face into the main document (shadow DOM @font-face is unreliable in Chrome)
+  injectFontFaceToDocument()
 
   // Wait for the React-rendered actions panel to appear in the DOM
   const panel = await waitForElm('ul.js-actions-panel')
