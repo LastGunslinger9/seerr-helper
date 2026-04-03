@@ -29,33 +29,33 @@ Out of scope:
 5. Feature should fail gracefully: if icon font fails to load, text remains readable and functional.
 
 ## Design Decision
-Use local bundled Font Awesome assets in extension package and reference them from Shadow DOM CSS via chrome.runtime.getURL() at runtime.
+Use local bundled Remix Icon assets in extension package and reference them from Shadow DOM CSS via chrome.runtime.getURL() at runtime.
 
 Why this approach:
-- Mirrors the external Overseerr-Assistant pattern (local CSS + local font files).
+- Mirrors the external Overseerr-Assistant pattern (local CSS + local font files), while using Remix Icon glyphs.
 - Compatible with MV3 and extension CSP.
 - Avoids dependency on external network availability.
 
 ## Icon Mapping
 ### Releases panel
-- Theatrical: fa-film
-- Digital: fa-cloud-download-alt
-- Physical: fa-compact-disc
-- No release dates: fa-calendar-times
+- Theatrical: ri-movie-2-line
+- Digital: ri-download-cloud-2-line
+- Physical: ri-disc-line
+- No release dates: ri-calendar-event-line
 
 ### Buttons and states
-- Requestable: fa-plus
-- Requesting: fa-spinner (animated spin)
-- Success or Approved or Available: fa-check
-- Pending approval or Processing: fa-clock
-- Declined or Failed or Blocklisted or Error: fa-times
-- Not configured: fa-cog
+- Requestable: ri-add-line
+- Requesting: ri-loader-4-line (animated spin)
+- Success or Approved or Available: ri-check-line
+- Pending approval or Processing: ri-time-line
+- Declined or Failed or Blocklisted or Error: ri-close-line
+- Not configured: ri-settings-3-line
 
 Note: state icon mapping must be deterministic from existing ExtendedUiState.
 
 ## Architecture Changes
 ### New local assets
-- Add local Font Awesome CSS and webfont files under src/content/assets/icons/fontawesome/.
+- Add local Remix Icon CSS and webfont files under src/content/assets/icons/remixicon/.
 - Keep only required styles or minimum bundle needed for selected icons (preferred subset).
 
 ### Content script changes
@@ -82,8 +82,9 @@ Note: state icon mapping must be deterministic from existing ExtendedUiState.
   - Update applyButtonState() to render icon + label safely.
   - Update populateReleasesPanel() to render iconized rows.
 - Add files under src/content/assets/icons/fontawesome/:
-  - all.min.css (or reduced equivalent)
-  - webfonts files needed by selected icons (woff2 minimum target)
+- Add files under src/content/assets/icons/remixicon/:
+  - remixicon.css (or reduced equivalent)
+  - font files needed by selected icons (woff2 minimum target)
 - Optional update in build config only if asset resolution needs explicit handling.
 
 ## Security and CSP Considerations
