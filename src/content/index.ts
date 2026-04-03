@@ -61,6 +61,15 @@ function createWidgetHost(): { host: HTMLLIElement; shadow: ShadowRoot } {
   return { host, shadow }
 }
 
+function createReleasesPanelHost(): { host: HTMLLIElement; shadow: ShadowRoot } {
+  const host = document.createElement('li')
+  host.id = 'seerr-releases-panel'
+  const shadowContainer = document.createElement('div')
+  host.appendChild(shadowContainer)
+  const shadow = shadowContainer.attachShadow({ mode: 'open' })
+  return { host, shadow }
+}
+
 function widgetCSS(): string {
   return `
     :host { display: block; }
@@ -133,16 +142,54 @@ function widgetCSS(): string {
     .seerr-btn--not-configured { background: #445566; color: #bbccdd; }
     .seerr-btn--error          { background: #dc2626; color: #fee2e2; }
     .seerr-btn--loading        { background: transparent; color: #bbccdd; padding: 0; }
-    .seerr-releases {
+    .seerr-releases-grid {
       display: flex;
       flex-direction: column;
-      gap: 1px;
+      gap: 2px;
+      padding: 0 12px;
     }
-    .seerr-releases:empty { display: none; }
-    .seerr-release {
+    .seerr-releases-grid:empty { display: none; }
+    .seerr-release-item {
       font-size: 11px;
       color: #bbccdd;
       opacity: 0.5;
+      line-height: 1.4;
+    }
+    .seerr-release-label {
+      color: #bbccdd;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      opacity: 0.7;
+      margin-bottom: 3px;
+    }
+  `
+}
+
+function releasesPanelCSS(): string {
+  return `
+    :host { display: block; }
+    .seerr-releases-container {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-family: GraphikWeb, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", Meiryo, sans-serif;
+      font-size: 13px;
+    }
+    .seerr-release-label {
+      color: #bbccdd;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      opacity: 0.7;
+    }
+    .seerr-release-item {
+      font-size: 11px;
+      color: #bbccdd;
+      opacity: 0.55;
+      line-height: 1.4;
     }
   `
 }
@@ -275,6 +322,41 @@ function populateReleases(el: HTMLDivElement, digital: string | null, physical: 
     span.className = 'seerr-release'
     span.textContent = `Physical \u00b7 ${physical}`
     el.appendChild(span)
+  }
+}
+
+function populateReleasesPanel(
+  container: HTMLDivElement,
+  theatrical: string | null,
+  digital: string | null,
+  physical: string | null
+): void {
+  container.textContent = ''
+  
+  if (theatrical || digital || physical) {
+    if (theatrical) {
+      const span = document.createElement('span')
+      span.className = 'seerr-release-item'
+      span.textContent = `Theatrical · ${theatrical}`
+      container.appendChild(span)
+    }
+    if (digital) {
+      const span = document.createElement('span')
+      span.className = 'seerr-release-item'
+      span.textContent = `Digital · ${digital}`
+      container.appendChild(span)
+    }
+    if (physical) {
+      const span = document.createElement('span')
+      span.className = 'seerr-release-item'
+      span.textContent = `Physical · ${physical}`
+      container.appendChild(span)
+    }
+  } else {
+    const noData = document.createElement('span')
+    noData.className = 'seerr-release-item'
+    noData.textContent = 'No release dates'
+    container.appendChild(noData)
   }
 }
 
