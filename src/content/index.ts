@@ -238,15 +238,14 @@ function releasesPanelCSS(): string {
       line-height: 18px;
     }
     .seerr-releases-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
+      display: grid;
+      grid-template-columns: auto 1.25em;
+      column-gap: 6px;
+      row-gap: 2px;
+      align-items: center;
     }
     .seerr-release-item {
-      display: grid;
-      grid-template-columns: 1.25em 1fr;
-      align-items: center;
-      gap: 4px;
+      display: contents;
       font-size: 13px;
       color: #bbccdd;
       line-height: 18px;
@@ -420,7 +419,7 @@ function populateReleasesPanel(
       iconEl.setAttribute('aria-hidden', 'true')
       const spanEl = document.createElement('span')
       spanEl.textContent = date
-      item.append(iconEl, spanEl)
+      item.append(spanEl, iconEl)
       container.appendChild(item)
     }
   } else {
@@ -431,7 +430,7 @@ function populateReleasesPanel(
     iconEl.setAttribute('aria-hidden', 'true')
     const spanEl = document.createElement('span')
     spanEl.textContent = 'No release dates'
-    item.append(iconEl, spanEl)
+    item.append(spanEl, iconEl)
     container.appendChild(item)
   }
 }
