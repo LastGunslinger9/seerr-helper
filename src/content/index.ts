@@ -380,7 +380,7 @@ async function refreshStatus(
   hdSub: HTMLSpanElement,
   fourKBtn: HTMLButtonElement,
   fourKSub: HTMLSpanElement,
-  releasesEl: HTMLDivElement
+  releasesGrid: HTMLDivElement
 ): Promise<void> {
   const resp = await sendMessage({ type: 'GET_MEDIA_STATUS', tmdbId, mediaType })
 
@@ -396,7 +396,7 @@ async function refreshStatus(
   applyButtonState(fourKBtn, resp.fourK)
   hdSub.textContent = resp.hdInfo ? `by ${resp.hdInfo}` : ''
   fourKSub.textContent = resp.fourKInfo ? `by ${resp.fourKInfo}` : ''
-  populateReleases(releasesEl, resp.digitalRelease, resp.physicalRelease)
+  populateReleasesPanel(releasesGrid, resp.theatricalRelease, resp.digitalRelease, resp.physicalRelease)
   const mediaId = resp.mediaId
 
   attachClickHandler(hdBtn, hdSub, resp.hd, false, tmdbId, mediaType, mediaId, baseUrl, fourKBtn, fourKSub)
