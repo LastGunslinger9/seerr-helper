@@ -266,7 +266,14 @@ function applyButtonState(btn: HTMLButtonElement, state: ExtendedUiState): void 
     .filter(c => c.startsWith(prefix))
     .forEach(c => btn.classList.remove(c))
   btn.classList.add(`${prefix}${state}`)
-  btn.textContent = STATE_LABELS[state]
+  const icon = BUTTON_ICON[state]
+  const label = STATE_LABELS[state]
+  if (icon) {
+    const spinClass = state === 'requesting' ? ' seerr-icon--spin' : ''
+    btn.innerHTML = `<i class="${icon} seerr-icon${spinClass}" aria-hidden="true"></i> ${label}`
+  } else {
+    btn.textContent = label
+  }
   btn.setAttribute('aria-label', `Seerr: ${STATE_LABELS[state]}`)
   btn.disabled = state === 'loading' || state === 'requesting' || state === 'blocklisted'
 }
@@ -459,7 +466,7 @@ function attachClickHandler(
       btn.textContent = 'Open'
     })
     btn.addEventListener('mouseleave', () => {
-      btn.textContent = STATE_LABELS[state]
+      applyButtonState(btn, state)
     })
     btn.addEventListener('click', () => {
       window.open(`${baseUrl}/movie/${tmdbId}`, '_blank', 'noopener')
