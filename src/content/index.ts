@@ -388,31 +388,25 @@ function populateReleasesPanel(
   physical: string | null
 ): void {
   container.textContent = ''
-  
+
   if (theatrical || digital || physical) {
-    if (theatrical) {
-      const span = document.createElement('span')
-      span.className = 'seerr-release-item'
-      span.textContent = `Theatrical · ${theatrical}`
-      container.appendChild(span)
-    }
-    if (digital) {
-      const span = document.createElement('span')
-      span.className = 'seerr-release-item'
-      span.textContent = `Digital · ${digital}`
-      container.appendChild(span)
-    }
-    if (physical) {
-      const span = document.createElement('span')
-      span.className = 'seerr-release-item'
-      span.textContent = `Physical · ${physical}`
-      container.appendChild(span)
+    const rows: Array<{ key: keyof typeof RELEASE_ICON; date: string | null }> = [
+      { key: 'theatrical', date: theatrical },
+      { key: 'digital',    date: digital },
+      { key: 'physical',   date: physical },
+    ]
+    for (const { key, date } of rows) {
+      if (!date) continue
+      const item = document.createElement('span')
+      item.className = 'seerr-release-item'
+      item.innerHTML = `<i class="${RELEASE_ICON[key]} seerr-icon" aria-hidden="true"></i><span>${date}</span>`
+      container.appendChild(item)
     }
   } else {
-    const noData = document.createElement('span')
-    noData.className = 'seerr-release-item'
-    noData.textContent = 'No release dates'
-    container.appendChild(noData)
+    const item = document.createElement('span')
+    item.className = 'seerr-release-item'
+    item.innerHTML = `<i class="${RELEASE_ICON.none} seerr-icon" aria-hidden="true"></i><span>No release dates</span>`
+    container.appendChild(item)
   }
 }
 
