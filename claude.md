@@ -18,6 +18,8 @@ npm run build   # compile to dist/
 npm test        # run Jest test suite
 ```
 
+> **Always run `npm run build` after every code change.** The extension loads from `dist/` — source changes have no effect until built.
+
 > Load the extension by pointing Chrome's "Load unpacked" at `dist/`.
 
 ## How It Works
