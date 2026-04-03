@@ -154,14 +154,8 @@ function widgetCSS(): string {
     }
     .seerr-col-label {
       color: #bbccdd;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
+      font-size: 22px;
       opacity: 0.7;
-    }
-    .seerr-col-label .seerr-icon {
-      font-size: 2em;
     }
     .seerr-col-sub {
       font-size: 11px;
