@@ -1,5 +1,6 @@
 const baseUrlInput = document.getElementById('base-url') as HTMLInputElement
 const apiKeyInput = document.getElementById('api-key') as HTMLInputElement
+const hideSharingInput = document.getElementById('hide-sharing') as HTMLInputElement
 const btnSave = document.getElementById('btn-save') as HTMLButtonElement
 const btnTest = document.getElementById('btn-test') as HTMLButtonElement
 const statusEl = document.getElementById('status') as HTMLDivElement
@@ -11,9 +12,10 @@ function setStatus(msg: string, type: 'ok' | 'err' | ''): void {
 
 // Load saved values on open
 ;(async () => {
-  const stored = await chrome.storage.sync.get(['seerr_base_url', 'seerr_api_key'])
+  const stored = await chrome.storage.sync.get(['seerr_base_url', 'seerr_api_key', 'hide_sharing_panel'])
   if (stored['seerr_base_url']) baseUrlInput.value = stored['seerr_base_url'] as string
   if (stored['seerr_api_key']) apiKeyInput.value = stored['seerr_api_key'] as string
+  if (stored['hide_sharing_panel']) hideSharingInput.checked = stored['hide_sharing_panel'] as boolean
 })()
 
 btnSave.addEventListener('click', async () => {
@@ -23,7 +25,11 @@ btnSave.addEventListener('click', async () => {
     setStatus('Both fields are required.', 'err')
     return
   }
-  await chrome.storage.sync.set({ seerr_base_url: baseUrl, seerr_api_key: apiKey })
+  await chrome.storage.sync.set({
+    seerr_base_url: baseUrl,
+    seerr_api_key: apiKey,
+    hide_sharing_panel: hideSharingInput.checked,
+  })
   setStatus('Settings saved.', 'ok')
 })
 

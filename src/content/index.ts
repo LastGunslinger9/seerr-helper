@@ -244,6 +244,17 @@ async function init(): Promise<void> {
   // Wait for the React-rendered actions panel to appear in the DOM
   const panel = await waitForElm('ul.js-actions-panel')
 
+  // Check if user wants to hide the sharing panel
+  const stored = await new Promise<Record<string, unknown>>(resolve => {
+    chrome.storage.sync.get(['hide_sharing_panel'], resolve)
+  })
+  if (stored['hide_sharing_panel']) {
+    const sharingPanel = panel.querySelector('li.panel-sharing')
+    if (sharingPanel) {
+      sharingPanel.remove()
+    }
+  }
+
   const resolved = resolveTmdbId()
   if (!resolved) return
 
