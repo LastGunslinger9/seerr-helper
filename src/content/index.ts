@@ -239,10 +239,11 @@ function releasesPanelCSS(): string {
     }
     .seerr-releases-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: auto auto;
       column-gap: 4px;
       row-gap: 2px;
       align-items: center;
+      justify-content: center;
     }
     .seerr-release-item {
       display: contents;
