@@ -239,8 +239,8 @@ function releasesPanelCSS(): string {
     }
     .seerr-releases-grid {
       display: grid;
-      grid-template-columns: auto 1.25em;
-      column-gap: 6px;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 4px;
       row-gap: 2px;
       align-items: center;
     }
@@ -249,6 +249,12 @@ function releasesPanelCSS(): string {
       font-size: 13px;
       color: #bbccdd;
       line-height: 18px;
+    }
+    .seerr-release-item > i {
+      justify-self: end;
+    }
+    .seerr-release-item > span {
+      justify-self: start;
     }
   `
 }
@@ -419,7 +425,7 @@ function populateReleasesPanel(
       iconEl.setAttribute('aria-hidden', 'true')
       const spanEl = document.createElement('span')
       spanEl.textContent = date
-      item.append(spanEl, iconEl)
+      item.append(iconEl, spanEl)
       container.appendChild(item)
     }
   } else {
@@ -430,7 +436,7 @@ function populateReleasesPanel(
     iconEl.setAttribute('aria-hidden', 'true')
     const spanEl = document.createElement('span')
     spanEl.textContent = 'No release dates'
-    item.append(spanEl, iconEl)
+    item.append(iconEl, spanEl)
     container.appendChild(item)
   }
 }
