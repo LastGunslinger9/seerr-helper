@@ -202,15 +202,6 @@ function widgetCSS(): string {
       opacity: 0.5;
       line-height: 1.4;
     }
-    .seerr-release-label {
-      color: #bbccdd;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      opacity: 0.7;
-      margin-bottom: 3px;
-    }
   `
 }
 
