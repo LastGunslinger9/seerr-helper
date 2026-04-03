@@ -1,4 +1,5 @@
 import { MessageRequest, MessageResponse, UiState, ExtendedUiState } from '../utils/types'
+import { BUTTON_ICON, RELEASE_ICON, QUALITY_ICON } from './icons'
 
 // ── Icon font CSS ────────────────────────────────────────────────────────────
 
@@ -327,7 +328,7 @@ async function init(): Promise<void> {
   hdCol.className = 'seerr-col'
   const hdLabel = document.createElement('span')
   hdLabel.className = 'seerr-col-label'
-  hdLabel.textContent = 'HD'
+  hdLabel.innerHTML = `<i class="${QUALITY_ICON['hd']} seerr-icon" aria-hidden="true"></i>`
   const hdSub = document.createElement('span')
   hdSub.className = 'seerr-col-sub'
   hdCol.append(hdLabel, hdBtn, hdSub)
@@ -336,7 +337,7 @@ async function init(): Promise<void> {
   fourKCol.className = 'seerr-col'
   const fourKLabel = document.createElement('span')
   fourKLabel.className = 'seerr-col-label'
-  fourKLabel.textContent = '4K'
+  fourKLabel.innerHTML = `<i class="${QUALITY_ICON['4k']} seerr-icon" aria-hidden="true"></i>`
   const fourKSub = document.createElement('span')
   fourKSub.className = 'seerr-col-sub'
   fourKCol.append(fourKLabel, fourKBtn, fourKSub)
