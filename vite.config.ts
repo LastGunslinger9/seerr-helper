@@ -8,7 +8,7 @@ const manifest = defineManifest({
   version: '0.1.0',
   description: 'Shows Seerr request status on Letterboxd film pages.',
   permissions: ['storage'],
-  host_permissions: ['<all_urls>'],
+  host_permissions: ['http://*/', 'https://*/'],
   content_scripts: [
     {
       matches: ['*://letterboxd.com/film/*'],

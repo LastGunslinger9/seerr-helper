@@ -133,7 +133,7 @@ function widgetCSS(): string {
   return `
     :host {
       display: block;
-      --seerr-text: #bbccdd;
+      --seerr-text: #99aabb;
       --seerr-surface: #445566;
     }
     .seerr-widget {
@@ -162,7 +162,7 @@ function widgetCSS(): string {
       display: inline-block;
       min-width: 18px;
       padding: 0px 3px;
-      border: 1.5px solid var(--seerr-text);
+      border: 1px solid var(--seerr-text);
       border-radius: 3px;
       color: var(--seerr-text);
       font-family: inherit;
@@ -188,29 +188,29 @@ function widgetCSS(): string {
       border: none;
       font-family: inherit;
       font-size: 12px;
-      font-weight: 600;
+      font-weight: normal;
       line-height: 1.6;
       cursor: pointer;
       background: var(--seerr-surface);
-      color: #fff;
-      transition: filter 0.15s;
-      &:hover:not(:disabled)  { filter: brightness(1.2); }
-      &:active:not(:disabled) { filter: brightness(0.9); }
-      &:disabled { opacity: 0.5; cursor: default; }
+      color: var(--seerr-text);
+      transition: opacity 0.15s;
+      &:hover:not(:disabled)  { opacity: 0.75; }
+      &:active:not(:disabled) { opacity: 0.55; }
+      &:disabled { opacity: 0.4; cursor: default; }
     }
     /* action states */
     .seerr-btn--requestable { background: #2c7be5; color: #fff; }
     .seerr-btn--requesting  { background: #2c7be5; color: #fff; opacity: 0.6; }
-    .seerr-btn--success     { background: #22c55e; color: #dcfce7; }
-    /* status states — canonical badge colors from status-codes-reference.md */
-    .seerr-btn--pending-approval { background: #eab308; color: #fef9c3; }
-    .seerr-btn--approved         { background: #22c55e; color: #dcfce7; }
-    .seerr-btn--declined         { background: #dc2626; color: #fee2e2; }
-    .seerr-btn--failed           { background: #dc2626; color: #fee2e2; }
-    .seerr-btn--processing       { background: #6366f1; color: #e0e7ff; }
-    .seerr-btn--partial          { background: #22c55e; color: #dcfce7; }
-    .seerr-btn--available        { background: #22c55e; color: #dcfce7; }
-    .seerr-btn--blocklisted      { background: #dc2626; color: #fee2e2; }
+    .seerr-btn--success     { background: rgb(34 197 94 / 0.8); color: #dcfce7; }
+    /* status states — canonical badge colors from status-codes-reference.md (bg at 80% opacity) */
+    .seerr-btn--pending-approval { background: rgb(234 179 8 / 0.8);   color: #fef9c3; }
+    .seerr-btn--approved         { background: rgb(34 197 94 / 0.8);   color: #dcfce7; }
+    .seerr-btn--declined         { background: rgb(220 38 38 / 0.8);   color: #fee2e2; }
+    .seerr-btn--failed           { background: rgb(220 38 38 / 0.8);   color: #fee2e2; }
+    .seerr-btn--processing       { background: rgb(99 102 241 / 0.8);  color: #e0e7ff; }
+    .seerr-btn--partial          { background: rgb(34 197 94 / 0.8);   color: #dcfce7; }
+    .seerr-btn--available        { background: rgb(34 197 94 / 0.8);   color: #dcfce7; }
+    .seerr-btn--blocklisted      { background: rgb(220 38 38 / 0.8);   color: #fee2e2; }
     /* utility states */
     .seerr-btn--not-configured { background: var(--seerr-surface); color: var(--seerr-text); }
     .seerr-btn--error          { background: #dc2626; color: #fee2e2; }
@@ -225,7 +225,7 @@ function releasesPanelCSS(): string {
       padding-block: 10px;
       background: #445566;
       border-bottom: 1px solid #2c3440;
-      --seerr-text: #bbccdd;
+      --seerr-text: #99aabb;
     }
     .seerr-releases-container {
       display: flex;
