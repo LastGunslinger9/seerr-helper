@@ -5,7 +5,7 @@ import { crx, defineManifest } from '@crxjs/vite-plugin'
 const manifest = defineManifest({
   manifest_version: 3,
   name: 'seerr-helper',
-  version: '0.1.0',
+  version: '1.0.0',
   description: 'Shows Seerr request status on Letterboxd film pages.',
   permissions: ['storage'],
   host_permissions: ['http://*/', 'https://*/'],
