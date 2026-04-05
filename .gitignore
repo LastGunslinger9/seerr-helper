@@ -22,6 +22,7 @@ npm-debug.log*
 .agents/
 claude.md
 skills-lock.json
+external-references/
 
 # OS
 .DS_Store
